@@ -18,7 +18,8 @@ public class Main extends Application {
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();
-        URL url=new URL("http://localhost:8080/BikeRent3Server/text/resources");
+        URL url=new URL("http://localhost:8080/text/resources");
+        System.out.println(" uerellen " +url);
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(url.openStream()));
 
