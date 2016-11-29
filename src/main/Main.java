@@ -1,6 +1,7 @@
 package main;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.BikeUser;
+import model.Deserializer;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -54,17 +56,19 @@ public class Main extends Application {
 
        HttpEntity entity = new StringEntity(valuePair);
       requsetPost.setEntity(entity);
-
        requsetPost.addHeader("User-Agent123", USER_AGENT);
         HttpResponse response = client.execute(requsetPost);
         System.out.println("Code " + response.getStatusLine().getStatusCode());
         String json = EntityUtils.toString(response.getEntity());
-        //BikeUser user = gson.fromJson(json, BikeUser.class);
+        BikeUser user = gson.fromJson(json, BikeUser.class);
+        System.out.println("json " + user.getUserID());
+        
+        
+        getFile();
+        
+    }
 
-
-        System.out.println("json " + json);
-
-
+    private void getFile() {
     }
 
     public static void main(String[] args) {

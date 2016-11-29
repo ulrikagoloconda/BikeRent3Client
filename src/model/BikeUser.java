@@ -8,100 +8,102 @@ import java.time.LocalDate;
  * @since 2016-09-16
  */
 public class BikeUser {
-  private int userID;
-  private String userName;
-  private String fName;
-  private String lName;
-  private int memberLevel;
-  private String email;
-  private int phone;
-  private LocalDate memberSince;
-  private String passw;
-  public BikeUser() {
+    private int userID;
+    private String userName;
+    private String fName;
+    private String lName;
+    private int memberLevel;
+    private String email;
+    private int phone;
+    private LocalDate memberSince;
+    private String passw;
+  //  private Bike rentedBIke;
 
-  }
+    public BikeUser() {
 
-  public BikeUser(String userName, String fName, String lName, int memberLevel, String email, int phone, LocalDate memberSince) {
-    this.userName = userName;
-    this.fName = fName;
-    this.lName = lName;
-    this.memberLevel = memberLevel;
-    this.email = email;
-    this.phone = phone;
-    this.memberSince = memberSince;
-  }
+    }
 
-  public int getUserID() {
-    return userID;
-  }
+    public BikeUser(String userName, String fName, String lName, int memberLevel, String email, int phone, LocalDate memberSince) {
+        this.userName = userName;
+        this.fName = fName;
+        this.lName = lName;
+        this.memberLevel = memberLevel;
+        this.email = email;
+        this.phone = phone;
+        this.memberSince = memberSince;
+    }
 
-  public void setUserID(int userID) {
-    this.userID = userID;
-  }
+    public int getUserID() {
+        return userID;
+    }
 
-  public String getfName() {
-    return fName;
-  }
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
 
-  public void setfName(String fName) {
-    this.fName = fName;
-  }
+    public String getfName() {
+        return fName;
+    }
 
-  public String getlName() {
-    return lName;
-  }
+    public void setfName(String fName) {
+        this.fName = fName;
+    }
 
-  public void setlName(String lName) {
-    this.lName = lName;
-  }
+    public String getlName() {
+        return lName;
+    }
 
-  public int getMemberLevel() {
-    return memberLevel;
-  }
+    public void setlName(String lName) {
+        this.lName = lName;
+    }
 
-  public void setMemberLevel(int memberLevel) {
-    this.memberLevel = memberLevel;
-  }
+    public int getMemberLevel() {
+        return memberLevel;
+    }
 
-  public String getEmail() {
-    return email;
-  }
+    public void setMemberLevel(int memberLevel) {
+        this.memberLevel = memberLevel;
+    }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+    public String getEmail() {
+        return email;
+    }
 
-  public int getPhone() {
-    return phone;
-  }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-  public void setPhone(int phone) {
-    this.phone = phone;
-  }
+    public int getPhone() {
+        return phone;
+    }
 
-  public LocalDate getMemberSince() {
-    return memberSince;
-  }
+    public void setPhone(int phone) {
+        this.phone = phone;
+    }
 
-  public void setMemberSince(LocalDate memberSince) {
-    this.memberSince = memberSince;
-  }
+    public LocalDate getMemberSince() {
+        return memberSince;
+    }
 
-  public String getUserName() {
-    return userName;
-  }
+    public void setMemberSince(LocalDate memberSince) {
+        this.memberSince = memberSince;
+    }
 
-  public void setUserName(String userName) {
-    this.userName = userName;
-  }
+    public String getUserName() {
+        return userName;
+    }
 
-public String getPassw() {
-	return passw;
-}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-public void setPassw(String passw) {
-	this.passw = passw;
-}
-  
+    public String getPassw() {
+        return passw;
+    }
+
+    public void setPassw(String passw) {
+        this.passw = passw;
+    }
+
 }
 
