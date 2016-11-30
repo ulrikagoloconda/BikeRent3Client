@@ -3,6 +3,7 @@ package model;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
@@ -10,7 +11,7 @@ import java.time.LocalDate;
  * @version 1.0
  * @since 2016-09-15
  */
-public class Bike {
+public class Bike{
   private int bikeID;
   private String brandName;
   private int modelYear;
@@ -19,13 +20,16 @@ public class Bike {
   private int size;
   private String type;
   private boolean available;
-  private ByteArrayInputStream imageStream;
-  private BikeUser createdBy;
+  private int createdByUserID;
   private String imageFileName;
-  private BufferedImage bufferedImage;
-  private FileInputStream fileInputImage;
   private LocalDate dayOfReturn;
   private LocalDate dayOfRent;
+
+ /* private ByteArrayInputStream imageStream;
+  private BufferedImage bufferedImage;
+  private FileInputStream fileInputImage;
+  */
+
 
 
   public Bike() {
@@ -115,44 +119,12 @@ public class Bike {
     this.brandName = brandName;
   }
 
-  public ByteArrayInputStream getImageStream() {
-    return imageStream;
-  }
-
-  public void setImageStream(ByteArrayInputStream imageStream) {
-    this.imageStream = imageStream;
-  }
-
-  public BikeUser getCreatedBy() {
-    return createdBy;
-  }
-
-  public void setCreatedBy(BikeUser createdBy) {
-    this.createdBy = createdBy;
-  }
-
   public String getImageFileName() {
     return imageFileName;
   }
 
   public void setImageFileName(String imageFileName) {
     this.imageFileName = imageFileName;
-  }
-
-  public BufferedImage getBufferedImage() {
-    return bufferedImage;
-  }
-
-  public void setBufferedImage(BufferedImage bufferedImage) {
-    this.bufferedImage = bufferedImage;
-  }
-
-  public FileInputStream getFileInputImage() {
-    return fileInputImage;
-  }
-
-  public void setFileInputImage(FileInputStream fileInputImage) {
-    this.fileInputImage = fileInputImage;
   }
 
   public LocalDate getDayOfReturn() {
@@ -174,12 +146,12 @@ public class Bike {
   @Override
   public String toString() {
     return "Bike Object: \n**********" + "\n" +
-        getBrandName() + "\n" +
-        //getImagePath() +"\n" +
-        getType() + "\n" +
-        getColor() + "\n" +
-        getModelYear() + "\n" +
-        getSize() + "\n ************";
+            getBrandName() + "\n" +
+            //getImagePath() +"\n" +
+            getType() + "\n" +
+            getColor() + "\n" +
+            getModelYear() + "\n" +
+            getSize() + "\n ************";
   }
 
 }

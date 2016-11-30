@@ -14,5 +14,6 @@
     <orderEntry type="library" name="jna-4.1.0" level="project" />
     <orderEntry type="library" name="aopalliance-repackaged-2.5.0-b05" level="project" />
     <orderEntry type="library" name="gson-2.8.0" level="project" />
+    <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
   </component>
 </module>
