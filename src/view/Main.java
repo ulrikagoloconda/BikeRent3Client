@@ -64,17 +64,14 @@ public class Main extends Application {
         jsonObject.addProperty("passw", "GoloGolo");
         String valuePair = jsonObject.toString();
 
-       HttpEntity entity = new StringEntity(valuePair);
-      requsetPost.setEntity(entity);
-       requsetPost.addHeader("User-Agent123", USER_AGENT);
+        HttpEntity entity = new StringEntity(valuePair);
+        requsetPost.setEntity(entity);
+        requsetPost.addHeader("User-Agent123", USER_AGENT);
         HttpResponse response = client.execute(requsetPost);
         System.out.println("Code " + response.getStatusLine().getStatusCode());
         String json = EntityUtils.toString(response.getEntity());
         BikeUser user = gson.fromJson(json, BikeUser.class);
-        System.out.println("json " + user.getCurrentBikeLoans());
-
-
-        
+        System.out.println("json " + user.getCurrentBikeLoans() + " " + json);
     }
 
     public static SpiderView getSpider() {

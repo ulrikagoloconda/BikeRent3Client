@@ -18,6 +18,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -118,7 +121,7 @@ public class MainVewController implements Initializable {
         Main.getSpider().getMain().showAdeminView();
     }
 
-    public boolean populateGridPane(List<Bike> bikeArray) {
+    public boolean populateGridPane(List<Bike> bikeArray) throws IOException {
         gridPane.getChildren().clear();
         returnBtn.setVisible(false);
         if(availableBikes!=null) {
@@ -146,7 +149,7 @@ public class MainVewController implements Initializable {
             gridPane.add(l, i, 0);
         }
         int j = 1;
-      /*  for (Bike b : bikeArray) {
+       for (Bike b : bikeArray) {
             values.clear();
             values.add("" + b.getModelYear());
             values.add(b.getColor());
@@ -157,13 +160,16 @@ public class MainVewController implements Initializable {
             for (int i = 0; i < 6; i++) {
                 if (i == 0) {
                     System.out.println(b.getBrandName() + " b ");
-                    System.out.println(b.getBufferedImage() + " b image ");
-                    System.out.println(SwingFXUtils.toFXImage(b.getBufferedImage(),null) + " b image ");
+                    // System.out.println(b.getBufferedImage() + " b image ");
+                   // SwingFXUtils.toFXImage(b.getBufferedImage(),null) + " b image ");
+                        BufferedImage theImage = ImageIO.read(b.getImageStream());
 
-                    Image image = SwingFXUtils.toFXImage(b.getBufferedImage(), null);
-                    ImageView iv = new ImageView();
-                    iv.setFitHeight(65);
-                    iv.setFitWidth(95);
+
+                        Image image = SwingFXUtils.toFXImage(theImage, null);
+                        ImageView iv = new ImageView();
+                        iv.setFitHeight(65);
+                        iv.setFitWidth(95);
+
                     iv.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
                         @Override
@@ -197,11 +203,12 @@ public class MainVewController implements Initializable {
             if (j > 3) {
                 return false;
             }
-        }*/
+        }
+
         return true;
     }
 
-    public boolean populateGridPane(Bike bike) {
+    public boolean populateGridPane(Bike bike) throws IOException {
         currentListInView.clear();
         returnBtn.setVisible(false);
         netBtn.setVisible(false);
@@ -218,7 +225,8 @@ public class MainVewController implements Initializable {
         values.add("" + bike.isAvailable());
         for (int i = 0; i < 6; i++) {
             if (i == 0) {
-               // Image image = SwingFXUtils.toFXImage(bike.getBufferedImage(), null);
+                BufferedImage theImage = ImageIO.read(bike.getImageStream());
+               Image image = SwingFXUtils.toFXImage(theImage, null);
                 ImageView iv = new ImageView();
                 iv.setFitHeight(65);
                 iv.setFitWidth(95);
@@ -231,7 +239,7 @@ public class MainVewController implements Initializable {
                     }
                 });
                 idMap.put(iv, bike.getBikeID());
-              //  iv.setImage(image);
+                iv.setImage(image);
                 gridPane.add(iv, i, 1);
             } else {
                 Label k = new Label();
@@ -321,7 +329,11 @@ public class MainVewController implements Initializable {
                 currentListInView = usersCurrentBikes.subList(0, usersCurrentBikes.size());
             }
         }
-        populateGridPane(currentListInView);
+        try {
+            populateGridPane(currentListInView);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void showChangeUserView(ActionEvent actionEvent) {
@@ -365,7 +377,11 @@ public class MainVewController implements Initializable {
             if(searchMap.containsKey(selected)) {
                 int bikeID = searchMap.get(selected);
              //   selectedBikeSearch = dbaccess.getBikeByID(bikeID);
-                populateGridPane(selectedBikeSearch);
+                try {
+                    populateGridPane(selectedBikeSearch);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -377,14 +393,18 @@ public class MainVewController implements Initializable {
     public void showUsersBikes(ActionEvent actionEvent) {
         availableBikes = null;
         selectedBikeSearch = null;
-      // usersCurrentBikes = AccessBike.getCurrentBikesByUserID(3);
-        if (usersCurrentBikes.size() > 3) {
-            currentListInView = usersCurrentBikes.subList(0, 3);
-            populateGridPane(currentListInView);
-        } else {
+        // usersCurrentBikes = AccessBike.getCurrentBikesByUserID(3);
+        try {
+            if (usersCurrentBikes.size() > 3) {
+                currentListInView = usersCurrentBikes.subList(0, 3);
+                populateGridPane(currentListInView);
+            } else {
+                populateGridPane(usersCurrentBikes);
+            }
             populateGridPane(usersCurrentBikes);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        populateGridPane(usersCurrentBikes);
     }
 
     public void returnBike(ActionEvent actionEvent) {
@@ -398,7 +418,11 @@ public class MainVewController implements Initializable {
         populateUserTextInGUI(currentUser);
         setStatLabel();
         bikeviewGrid.setAvailable(true);
-        populateGridPane(bikeviewGrid);
+        try {
+            populateGridPane(bikeviewGrid);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
