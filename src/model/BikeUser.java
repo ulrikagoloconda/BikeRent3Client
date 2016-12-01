@@ -18,7 +18,8 @@ public class BikeUser {
     private int phone;
     private LocalDate memberSince;
     private String passw;
-  private ArrayList<Bike> currentBikeLoans;
+    private ArrayList<Bike> currentBikeLoans;
+    private ArrayList<Integer> totalBikeLoans;
 
     public BikeUser() {
     }
@@ -111,6 +112,14 @@ public class BikeUser {
 
     public void setCurrentBikeLoans(ArrayList<Bike> currentBikeLoans) {
         this.currentBikeLoans = currentBikeLoans;
+    }
+
+    public ArrayList<Integer> getTotalBikeLoans() {
+        return totalBikeLoans;
+    }
+
+    public void setTotalBikeLoans(ArrayList<Integer> totalBikeLoans) {
+        this.totalBikeLoans = totalBikeLoans;
     }
 }
 

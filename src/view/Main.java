@@ -40,6 +40,7 @@ public class Main extends Application {
     private Scene changeUserScene;
     private Scene newUserScene;
     private Scene statViewScean;
+    BikeUser user;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -70,8 +71,13 @@ public class Main extends Application {
         HttpResponse response = client.execute(requsetPost);
         System.out.println("Code " + response.getStatusLine().getStatusCode());
         String json = EntityUtils.toString(response.getEntity());
-        BikeUser user = gson.fromJson(json, BikeUser.class);
+        System.out.println(json);
+       user  = gson.fromJson(json, BikeUser.class);
         System.out.println("json " + user.getCurrentBikeLoans() + " " + json);
+    }
+    //TODO ta bort denna metod, en tillfällig lösning för att jobba med mianView
+    public BikeUser tempMetod(){
+        return user;
     }
 
     public static SpiderView getSpider() {

@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import model.MainViewInformaiton;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -39,6 +40,10 @@ public class LoginVewController implements Initializable {
     public void logInClick(Event event) {
         String userName = userNameText.getText();
         String password = passwordText.getText();
+       // TODO hårdkodad lösning som behöver ändras
+        MainViewInformaiton vfi = new MainViewInformaiton();
+
+        showMainGui();
 
      /*   try {
             currentUser = dbAccess.logIn(userName, password);

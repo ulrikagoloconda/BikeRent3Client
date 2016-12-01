@@ -1,6 +1,8 @@
 package view;
 
 
+import ServerConnecttion.ServerCall;
+import ServerConnecttion.ServerCallImpl;
 import model.Bike;
 import model.BikeUser;
 import javafx.embed.swing.SwingFXUtils;
@@ -17,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import model.MainViewInformaiton;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -53,10 +56,12 @@ public class MainVewController implements Initializable {
     private int selectedFromGrid;
     private ArrayList<Bike> availableBikes;
     private List<Bike> currentListInView;
-    private BikeUser currentUser;
+    private BikeUser user;
+    private MainViewInformaiton mvi;
     Map<String, Integer> searchMap;
     private Bike selectedBikeSearch;
    private  ArrayList<Bike> usersCurrentBikes;
+    private ServerCall serverCall;
 
 
     private String errorTitle = "Fel i huvidfönster";
@@ -65,55 +70,66 @@ public class MainVewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Main.getSpider().setMainView(this);
-        currentUser = Main.getSpider().getLoginView().getCurrentUser();
-        populateUserTextInGUI(currentUser);
-        executeLoanBtn.setDisable(true);
-        netBtn.setDisable(true);
-        if (currentUser.getMemberLevel() != 10) {
+        //TODO ta b ort detta när login är klar
+        user = Main.getSpider().getMain().tempMetod();
+        user.setTotalBikeLoans(new ArrayList<>());
+       mvi = new MainViewInformaiton();
+        mvi.setCurrentUser(user);
+        mvi.setRentedBikes(5);
+        mvi.setTotalBikes(20);
+        populateUserTextInGUI(mvi.getCurrentUser());
+       if (mvi.getCurrentUser().getMemberLevel() != 10) {
             adminBtn.setVisible(false);
         }
+        netBtn.setDisable(true);
+        executeLoanBtn.setDisable(true);
         combobox.setEditable(true);
         idMap = new HashMap<>();
         returnBtn.setVisible(false);
         currentListInView = new ArrayList<>();
+        serverCall = new ServerCallImpl();
     }
 
     public void populateUserTextInGUI(BikeUser bikeUser) {
-     /*   ArrayList<Integer> bikesInUse = dbaccess.getUsersCurrentBikes(bikeUser.getUserID());
-        ArrayList<Integer> totalBikes = dbaccess.getUsersTotalLoan(bikeUser.getUserID());
+        ArrayList<Bike> bikesInUse = user.getCurrentBikeLoans();
+        ArrayList<Integer> totalBikes = user.getTotalBikeLoans();
         userNameLabel.setText(bikeUser.getUserName());
         memberLevelLabel.setText("* " + bikeUser.getMemberLevel() + " *");
         activeLoanLabel.setText("" + bikesInUse.size());
+        System.out.println(totalBikes.size() + " ");
         numberOfLoanedBikesLabel.setText("" + totalBikes.size());
-        setStatLabel();*/
+        setStatLabel();
 
     }
 
     private void setStatLabel() {
-       /* float free = dbaccess.selectAvailableBikes().size();
-        float total = dbaccess.getAllBikes().size();
+        float total = mvi.getTotalBikes();
+        float free = total - mvi.getRentedBikes();
+
+        BikeUser user = Main.getSpider().getMain().tempMetod();
+
         System.out.println("free" + " " + free);
         System.out.println("tot: " + total);
         float poc = free / total;
         System.out.println("poc: " + poc);
         poc = poc * 100;
         System.out.println(poc);
-        statLabel.setText("" + poc + " %");*/
+        statLabel.setText("" + poc + " %");
     }
 
 
     public void searchAvailableBikes(ActionEvent actionEvent) {
-        /*usersCurrentBikes = null;
+        usersCurrentBikes = null;
         selectedBikeSearch = null;
         executeLoanBtn.setDisable(true);
         netBtn.setVisible(false);
-        availableBikes = dbaccess.selectAvailableBikes();
-        System.out.println(availableBikes.size() + " Längden på listan ");
+        availableBikes =  serverCall.getAvailableBikes();
+      /*  System.out.println(availableBikes.size() + " Längden på listan ");
         if (availableBikes.size() > 3) {
             currentListInView = availableBikes.subList(0, 3);
-            populateGridPane(currentListInView);
+           // populateGridPane(currentListInView);
         } else {
-            populateGridPane(availableBikes);
+           // populateGridPane(availableBikes);
         }*/
     }
 
@@ -415,7 +431,7 @@ public class MainVewController implements Initializable {
             }
         }
        // AccessBike.returnBike(selectedFromGrid, currentUser.getUserID());
-        populateUserTextInGUI(currentUser);
+        populateUserTextInGUI(mvi.getCurrentUser());
         setStatLabel();
         bikeviewGrid.setAvailable(true);
         try {
