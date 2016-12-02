@@ -5,6 +5,7 @@ import model.BikeUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Goloconda on 2016-12-01.
@@ -15,11 +16,12 @@ public interface ServerCall {
     boolean updateUser(BikeUser oldUser, BikeUser newUser);
     boolean errorEndpoint(String html,int userID);
     ArrayList<Bike> getAvailableBikes();
-    ArrayList<Bike> getBikesFromSearch(String searchString);
+    Map<String,Integer> getBikesFromSearch(String searchString);
     Bike addBikeToDB(Bike newBike);
     boolean removeBikeFromDB(int bikeID);
     Bike executeBikeLoan(Bike bikeToRent);
     boolean returnBike(Bike bikeToReturn);
+    Bike getSingelBike(int bikeID);
 
     /*login (returnerar userObjekt med currentLoan inbäddat + statistikgrundande intar)
     newUser (startar inte session! returnerar booelan)

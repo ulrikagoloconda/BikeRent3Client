@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import model.Bike;
 import model.BikeUser;
+import model.Bikes;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -14,7 +15,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.http.HttpHeaders.USER_AGENT;
 
@@ -46,8 +49,7 @@ public class ServerCallImpl implements ServerCall {
     @Override
     public ArrayList<Bike> getAvailableBikes() {
         Gson gson = new Gson();
-        urlString += "/availableBikes";
-        System.out.println(urlString);
+        Bikes bikes = null;
         urlString = "http://localhost:8080/text/resources/availableBikes";
         try {
             HttpClient client = HttpClientBuilder.create().build();
@@ -57,17 +59,21 @@ public class ServerCallImpl implements ServerCall {
             System.out.println("Code " + response.getStatusLine().getStatusCode());
             String json = EntityUtils.toString(response.getEntity());
             System.out.println(json);
-           /* user = gson.fromJson(json, BikeUser.class);
-            System.out.println("json " + user.getCurrentBikeLoans() + " " + json);*/
+            bikes = gson.fromJson(json,Bikes.class);
+            System.out.println("json " + bikes.getBikes() + " " + json);
         }catch (Exception e){
             e.printStackTrace();
         }
-        return null;
+        return bikes.getBikes();
     }
 
     @Override
-    public ArrayList<Bike> getBikesFromSearch(String searchString) {
-     return null;
+    public Map<String,Integer> getBikesFromSearch(String searchString) {
+        Map<String,Integer> returnMap = new HashMap<>();
+        Gson gson = new Gson();
+        urlString = "http://localhost:8080/text/resources/search";
+
+return returnMap;
     }
 
     @Override
@@ -88,5 +94,10 @@ public class ServerCallImpl implements ServerCall {
     @Override
     public boolean returnBike(Bike bikeToReturn) {
         return false;
+    }
+
+    @Override
+    public Bike getSingelBike(int bikeID) {
+        return null;
     }
 }

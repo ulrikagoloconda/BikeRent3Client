@@ -7,6 +7,8 @@ public class MainViewInformaiton {
     private BikeUser currentUser;
     private int totalBikes;
     private int rentedBikes;
+    private String authToken;
+
 
     public MainViewInformaiton(){
 
@@ -34,5 +36,13 @@ public class MainViewInformaiton {
 
     public void setRentedBikes(int rentedBikes) {
         this.rentedBikes = rentedBikes;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 }

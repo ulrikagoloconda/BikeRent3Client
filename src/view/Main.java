@@ -10,6 +10,7 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import model.BikeUser;
+import model.MainViewInformaiton;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -40,7 +41,8 @@ public class Main extends Application {
     private Scene changeUserScene;
     private Scene newUserScene;
     private Scene statViewScean;
-    BikeUser user;
+    private BikeUser user;
+    private MainViewInformaiton mvi;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -72,7 +74,8 @@ public class Main extends Application {
         System.out.println("Code " + response.getStatusLine().getStatusCode());
         String json = EntityUtils.toString(response.getEntity());
         System.out.println(json);
-       user  = gson.fromJson(json, BikeUser.class);
+      mvi  = gson.fromJson(json, MainViewInformaiton.class);
+        user = mvi.getCurrentUser();
         System.out.println("json " + user.getCurrentBikeLoans() + " " + json);
     }
     //TODO ta bort denna metod, en tillfällig lösning för att jobba med mianView
