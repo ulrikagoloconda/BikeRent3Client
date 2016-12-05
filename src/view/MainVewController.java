@@ -121,12 +121,9 @@ public class MainVewController implements Initializable {
 
 
     public void searchAvailableBikes(ActionEvent actionEvent) {
-        usersCurrentBikes = null;
-        selectedBikeSearch = null;
         executeLoanBtn.setDisable(true);
         netBtn.setVisible(false);
         availableBikes = serverCall.getAvailableBikes();
-        System.out.println(availableBikes.size() + " Längden på listan ");
         if (availableBikes.size() > 3) {
             currentListInView = availableBikes.subList(0, 3);
             populateGridPane(PopulateType.AvailableBikes, currentListInView);
@@ -318,23 +315,23 @@ public class MainVewController implements Initializable {
 
 
     public void popuateComboBox(Event event) {
-       // searchMap = dbaccess.getSearchValue(combobox.getEditor().getText());
-        searchMap = serverCall.getBikesFromSearch(combobox.getEditor().getText());
-        int count = 0;
-        combobox.getItems().clear();
-        for (Map.Entry<String, Integer> entry : searchMap.entrySet()) {
-            if (count > 10) {
-                break;
+        if(combobox.getEditor().getText().length()>2) {
+            searchMap = serverCall.getBikesFromSearch(combobox.getEditor().getText());
+            int count = 0;
+            combobox.getItems().clear();
+            for (Map.Entry<String, Integer> entry : searchMap.entrySet()) {
+                if (count > 10) {
+                    break;
+                }
+                combobox.getItems().add(entry.getKey());
+                count++;
             }
-            combobox.getItems().add(entry.getKey());
-            count++;
         }
     }
 
 
     public void setSearchResult(ActionEvent actionEvent) {
-        usersCurrentBikes = null;
-        availableBikes = null;
+        System.out.println("Vad händer när i setSearchResult");
         if (combobox.getSelectionModel().getSelectedItem().toString() != null) {
             String selected = combobox.getSelectionModel().getSelectedItem().toString();
             if (searchMap.containsKey(selected)) {

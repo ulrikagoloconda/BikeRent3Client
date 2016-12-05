@@ -7,7 +7,8 @@ public class MainViewInformaiton {
     private BikeUser currentUser;
     private int totalBikes;
     private int rentedBikes;
-    private String authToken;
+    private String searchValue;
+    private int singleBikeID;
 
 
     public MainViewInformaiton(){
@@ -38,11 +39,19 @@ public class MainViewInformaiton {
         this.rentedBikes = rentedBikes;
     }
 
-    public String getAuthToken() {
-        return authToken;
+    public String getSearchValue() {
+        return searchValue;
     }
 
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
+    public void setSearchValue(String searchValue) {
+        this.searchValue = searchValue;
+    }
+
+    public int getSingleBikeID() {
+        return singleBikeID;
+    }
+
+    public void setSingleBikeID(int singleBikeID) {
+        this.singleBikeID = singleBikeID;
     }
 }

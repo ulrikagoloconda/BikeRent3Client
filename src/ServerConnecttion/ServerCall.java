@@ -22,6 +22,7 @@ public interface ServerCall {
     Bike executeBikeLoan(Bike bikeToRent);
     boolean returnBike(Bike bikeToReturn);
     Bike getSingelBike(int bikeID);
+    void closeSession();
 
     /*login (returnerar userObjekt med currentLoan inbäddat + statistikgrundande intar)
     newUser (startar inte session! returnerar booelan)

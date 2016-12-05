@@ -1,14 +1,18 @@
 package view;
 
+import ServerConnecttion.ServerCall;
+import ServerConnecttion.ServerCallImpl;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.BikeUser;
 import model.MainViewInformaiton;
 import org.apache.http.HttpEntity;
@@ -43,11 +47,13 @@ public class Main extends Application {
     private Scene statViewScean;
     private BikeUser user;
     private MainViewInformaiton mvi;
+    private ServerCall serverCall ;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         spider = new SpiderView();
         spider.setMain(this);
+        serverCall = new ServerCallImpl();
         this.primaryStage = primaryStage;
         loginLoader = new FXMLLoader(getClass().getResource("../view/viewfxml/loginView.fxml"));
         Parent root = loginLoader.load();
@@ -56,6 +62,14 @@ public class Main extends Application {
         this.primaryStage.setScene(loginScene);
         this.primaryStage.show();
 
+        this.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+            @Override
+            public void handle(WindowEvent event){
+                serverCall.closeSession();
+            }
+        });
+        user = new BikeUser();
         String urlString = "http://localhost:8080/text/resources";
         Gson gson = new Gson();
 
@@ -81,6 +95,9 @@ public class Main extends Application {
     //TODO ta bort denna metod, en tillfällig lösning för att jobba med mianView
     public BikeUser tempMetod(){
         return user;
+    }
+    public MainViewInformaiton getMainVI(){
+        return mvi;
     }
 
     public static SpiderView getSpider() {

@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import model.Bike;
 import model.BikeUser;
 import model.Bikes;
+import model.MainViewInformaiton;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -13,6 +14,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import view.Main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,9 +55,17 @@ public class ServerCallImpl implements ServerCall {
         urlString = "http://localhost:8080/text/resources/availableBikes";
         try {
             HttpClient client = HttpClientBuilder.create().build();
-            HttpGet requsetGet = new HttpGet(urlString);
-            requsetGet.addHeader("User-Agent123", USER_AGENT);
-            HttpResponse response = client.execute(requsetGet);
+            HttpPost requsetPost = new HttpPost(urlString);
+            requsetPost.addHeader("User-Agent123", USER_AGENT);
+            JsonObject jsonObject = new JsonObject();
+            String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
+            int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
+            jsonObject.addProperty("sessionToken", token);
+            jsonObject.addProperty("userID", userID);
+            String valuePair = jsonObject.toString();
+            HttpEntity entity = new StringEntity(valuePair);
+            requsetPost.setEntity(entity);
+            HttpResponse response = client.execute(requsetPost);
             System.out.println("Code " + response.getStatusLine().getStatusCode());
             String json = EntityUtils.toString(response.getEntity());
             System.out.println(json);
@@ -72,8 +82,33 @@ public class ServerCallImpl implements ServerCall {
         Map<String,Integer> returnMap = new HashMap<>();
         Gson gson = new Gson();
         urlString = "http://localhost:8080/text/resources/search";
-
-return returnMap;
+        try {
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpPost requsetPost = new HttpPost(urlString);
+            requsetPost.addHeader("User-Agent123", USER_AGENT);
+           MainViewInformaiton mvi = new MainViewInformaiton();
+            String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
+            int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
+            BikeUser user = new BikeUser();
+            user.setSessionToken(token);
+            user.setUserID(userID);
+            mvi.setCurrentUser(user);
+            mvi.setSearchValue(searchString);
+            String json = gson.toJson(mvi);
+            HttpEntity entity = new StringEntity(json);
+            requsetPost.setEntity(entity);
+            HttpResponse response = client.execute(requsetPost);
+            System.out.println("Code " + response.getStatusLine().getStatusCode());
+            String returnedJson = EntityUtils.toString(response.getEntity());
+            System.out.println("Returned json "+returnedJson);
+            Gson gson1 = new Gson();
+            Bikes bikes = gson1.fromJson(returnedJson,Bikes.class);
+            returnMap = bikes.getSearchResults();
+            return returnMap;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -98,6 +133,55 @@ return returnMap;
 
     @Override
     public Bike getSingelBike(int bikeID) {
-        return null;
+        Gson gson = new Gson();
+        urlString = "http://localhost:8080/text/resources/getBike";
+        try {
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpPost requsetPost = new HttpPost(urlString);
+            requsetPost.addHeader("User-Agent123", USER_AGENT);
+            JsonObject jsonObject = new JsonObject();
+            String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
+            int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
+            jsonObject.addProperty("sessionToken", token);
+            jsonObject.addProperty("userID", userID);
+            String valuePair = jsonObject.toString();
+            HttpEntity entity = new StringEntity(valuePair);
+            requsetPost.setEntity(entity);
+            HttpResponse response = client.execute(requsetPost);
+            System.out.println("Code " + response.getStatusLine().getStatusCode());
+            String json = EntityUtils.toString(response.getEntity());
+            System.out.println(json);
+            BikeUser user = gson.fromJson(json, BikeUser.class);
+            Main.getSpider().getMain().getMainVI().getCurrentUser().setSessionToken(user.getSessionToken());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void closeSession() {
+        Gson gson = new Gson();
+        urlString = "http://localhost:8080/text/resources/closeSession";
+        try {
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpPost requsetPost = new HttpPost(urlString);
+            requsetPost.addHeader("User-Agent123", USER_AGENT);
+            JsonObject jsonObject = new JsonObject();
+            String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
+            int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
+            jsonObject.addProperty("sessionToken", token);
+            jsonObject.addProperty("userID", userID);
+            String valuePair = jsonObject.toString();
+            HttpEntity entity = new StringEntity(valuePair);
+            requsetPost.setEntity(entity);
+            HttpResponse response = client.execute(requsetPost);
+            System.out.println("Code " + response.getStatusLine().getStatusCode());
+            String json = EntityUtils.toString(response.getEntity());
+            System.out.println(json);
+            BikeUser user = gson.fromJson(json, BikeUser.class);
+           Main.getSpider().getMain().getMainVI().getCurrentUser().setSessionToken(user.getSessionToken());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

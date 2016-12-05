@@ -18,6 +18,7 @@ public class BikeUser {
     private int phone;
     private LocalDate memberSince;
     private String passw;
+    private String sessionToken;
     private ArrayList<Bike> currentBikeLoans;
     private ArrayList<Integer> totalBikeLoans;
 
@@ -120,6 +121,14 @@ public class BikeUser {
 
     public void setTotalBikeLoans(ArrayList<Integer> totalBikeLoans) {
         this.totalBikeLoans = totalBikeLoans;
+    }
+
+    public String getSessionToken() {
+        return sessionToken;
+    }
+
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
     }
 }
 
