@@ -331,12 +331,11 @@ public class MainVewController implements Initializable {
 
 
     public void setSearchResult(ActionEvent actionEvent) {
-        System.out.println("Vad händer när i setSearchResult");
-        if (combobox.getSelectionModel().getSelectedItem().toString() != null) {
+        if (combobox.getSelectionModel().getSelectedItem() != null) {
             String selected = combobox.getSelectionModel().getSelectedItem().toString();
             if (searchMap.containsKey(selected)) {
                 int bikeID = searchMap.get(selected);
-                selectedBikeSearch = serverCall.getSingelBike(bikeID);
+                selectedBikeSearch = serverCall.getSingleBike(bikeID);
                 List<Bike> bike = new ArrayList<>();
                 bike.add(selectedBikeSearch);
                 populateGridPane(PopulateType.SearchResults, bike);

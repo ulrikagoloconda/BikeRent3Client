@@ -21,7 +21,7 @@ public interface ServerCall {
     boolean removeBikeFromDB(int bikeID);
     Bike executeBikeLoan(Bike bikeToRent);
     boolean returnBike(Bike bikeToReturn);
-    Bike getSingelBike(int bikeID);
+    Bike getSingleBike(int bikeID);
     void closeSession();
 
     /*login (returnerar userObjekt med currentLoan inbäddat + statistikgrundande intar)
