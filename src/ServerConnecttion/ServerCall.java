@@ -19,7 +19,7 @@ public interface ServerCall {
     Map<String,Integer> getBikesFromSearch(String searchString);
     Bike addBikeToDB(Bike newBike);
     boolean removeBikeFromDB(int bikeID);
-    Bike executeBikeLoan(Bike bikeToRent);
+    Bike executeBikeLoan(int bikeID);
     boolean returnBike(Bike bikeToReturn);
     Bike getSingleBike(int bikeID);
     void closeSession();

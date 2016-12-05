@@ -9,6 +9,7 @@ public class MainViewInformaiton {
     private int rentedBikes;
     private String searchValue;
     private int singleBikeID;
+    private int bikeToRentID;
 
 
     public MainViewInformaiton(){
@@ -53,5 +54,13 @@ public class MainViewInformaiton {
 
     public void setSingleBikeID(int singleBikeID) {
         this.singleBikeID = singleBikeID;
+    }
+
+    public int getBikeToRentID() {
+        return bikeToRentID;
+    }
+
+    public void setBikeToRentID(int bikeToRentID) {
+        this.bikeToRentID = bikeToRentID;
     }
 }

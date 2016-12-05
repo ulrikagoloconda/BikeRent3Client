@@ -300,17 +300,21 @@ public class MainVewController implements Initializable {
     }
 
     public void executeBikeLoan(ActionEvent actionEvent) {
-      /* Bike b = AccessBike.getBikeByID(selectedFromGrid);
+       Bike b = serverCall.getSingleBike(selectedFromGrid);
         if(b.isAvailable()) {
-            String message = dbaccess.executeBikeLoan(selectedFromGrid, Main.getSpider().getLoginView().getCurrentUser().getUserID());
-            messageLabel.setText(message);
-            b.setAvailable(false);
-            populateGridPane(b);
-            populateUserTextInGUI(currentUser);
+            Bike rentedBike = serverCall.executeBikeLoan(b.getBikeID());
+
+            messageLabel.setText("Cykeln är lånad till och med " + rentedBike.getDayOfReturn());
+            rentedBike.setAvailable(false);
+            List<Bike> bikeList = new ArrayList<>();
+            bikeList.add(rentedBike);
+            populateGridPane(PopulateType.RentedBike,bikeList);
+            //TODO tänk hut hur userTextGUI ska populeras
+            //populateUserTextInGUI(currentUser);
             setStatLabel();
         }else {
             messageLabel.setText("Cykeln är tyvärr inte ledig");
-        }*/
+        }
     }
 
 

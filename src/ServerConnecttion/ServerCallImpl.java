@@ -121,8 +121,35 @@ public class ServerCallImpl implements ServerCall {
     }
 
     @Override
-    public Bike executeBikeLoan(Bike bikeToRent) {
-        return null;
+    public Bike executeBikeLoan(int bikeID) {
+        urlString = "http://localhost:8080/text/resources/executeRental";
+        Gson gson = new Gson();
+        try {
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpPost requsetPost = new HttpPost(urlString);
+            requsetPost.addHeader("BikeToRent", USER_AGENT);
+            String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
+            int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
+            MainViewInformaiton mvi = new MainViewInformaiton();
+            BikeUser user = new BikeUser();
+            user.setSessionToken(token);
+            user.setUserID(userID);
+            mvi.setCurrentUser(user);
+            mvi.setBikeToRentID(bikeID);
+            String json = gson.toJson(mvi);
+            HttpEntity entity = new StringEntity(json);
+            requsetPost.setEntity(entity);
+            HttpResponse response = client.execute(requsetPost);
+            System.out.println("Code " + response.getStatusLine().getStatusCode());
+            String returnedJson = EntityUtils.toString(response.getEntity());
+            System.out.println(returnedJson);
+            Gson gson1 = new Gson();
+            Bike bike = gson1.fromJson(returnedJson, Bike.class);
+            return bike;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
