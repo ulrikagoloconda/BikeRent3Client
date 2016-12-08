@@ -67,14 +67,19 @@ public class ServerCallImpl implements ServerCall {
             requsetPost.setEntity(entity);
             HttpResponse response = client.execute(requsetPost);
             System.out.println("Code " + response.getStatusLine().getStatusCode());
-            String json = EntityUtils.toString(response.getEntity());
-            System.out.println(json);
-            bikes = gson.fromJson(json,Bikes.class);
-            System.out.println("json " + bikes.getBikes() + " " + json);
+           if(response.getStatusLine().getStatusCode()==200) {
+               String json = EntityUtils.toString(response.getEntity());
+               System.out.println(json);
+               bikes = gson.fromJson(json, Bikes.class);
+               System.out.println("json " + bikes.getBikes() + " " + json);
+               return bikes.getBikes();
+           } else {
+               Main.getSpider().getMain().showLoginView();
+           }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return bikes.getBikes();
+        return new ArrayList<>();
     }
 
     @Override
@@ -199,18 +204,20 @@ public class ServerCallImpl implements ServerCall {
             requsetPost.addHeader("User-Agent123", USER_AGENT);
             JsonObject jsonObject = new JsonObject();
             String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
-            int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
-            jsonObject.addProperty("sessionToken", token);
-            jsonObject.addProperty("userID", userID);
-            String valuePair = jsonObject.toString();
-            HttpEntity entity = new StringEntity(valuePair);
-            requsetPost.setEntity(entity);
-            HttpResponse response = client.execute(requsetPost);
-            System.out.println("Code " + response.getStatusLine().getStatusCode());
-            String json = EntityUtils.toString(response.getEntity());
-            System.out.println(json);
-            BikeUser user = gson.fromJson(json, BikeUser.class);
-           Main.getSpider().getMain().getMainVI().getCurrentUser().setSessionToken(user.getSessionToken());
+            if(!token.equals("-1")) {
+                int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
+                jsonObject.addProperty("sessionToken", token);
+                jsonObject.addProperty("userID", userID);
+                String valuePair = jsonObject.toString();
+                HttpEntity entity = new StringEntity(valuePair);
+                requsetPost.setEntity(entity);
+                HttpResponse response = client.execute(requsetPost);
+                System.out.println("Code " + response.getStatusLine().getStatusCode());
+                String json = EntityUtils.toString(response.getEntity());
+                System.out.println(json);
+                BikeUser user = gson.fromJson(json, BikeUser.class);
+                Main.getSpider().getMain().getMainVI().getCurrentUser().setSessionToken(user.getSessionToken());
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

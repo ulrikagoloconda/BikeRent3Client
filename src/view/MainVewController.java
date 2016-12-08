@@ -24,7 +24,6 @@ import model.PopulateType;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -33,6 +32,8 @@ import java.util.*;
  * @version 1.0
  * @since 2016-09-15
  */
+
+//Klass som fungerar som controller till mainView. Här finns metoder som motsvarar funktionaliteten i programmets huvudfönster.
 public class MainVewController implements Initializable {
     @FXML
     private TableColumn columCykel;
@@ -66,15 +67,14 @@ public class MainVewController implements Initializable {
     private ServerCall serverCall;
 
 
-    private String errorTitle = "Fel i huvidfönster";
+    private String errorTitle = "Fel i huvudfönster";
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Main.getSpider().setMainView(this);
         //TODO ta b ort detta när login är klar
-        user = Main.getSpider().getMain().tempMetod();
-        user.setTotalBikeLoans(new ArrayList<>());
+        user = Main.getSpider().getMain().tempMetodGetCurrentUser();
         mvi = new MainViewInformaiton();
         mvi.setCurrentUser(user);
         mvi.setRentedBikes(5);
@@ -107,9 +107,6 @@ public class MainVewController implements Initializable {
     private void setStatLabel() {
         float total = mvi.getTotalBikes();
         float free = total - mvi.getRentedBikes();
-
-        BikeUser user = Main.getSpider().getMain().tempMetod();
-
         System.out.println("free" + " " + free);
         System.out.println("tot: " + total);
         float poc = free / total;
@@ -126,9 +123,9 @@ public class MainVewController implements Initializable {
         availableBikes = serverCall.getAvailableBikes();
         if (availableBikes.size() > 3) {
             currentListInView = availableBikes.subList(0, 3);
-            populateGridPane(PopulateType.AvailableBikes, currentListInView);
+            populateGridPane(PopulateType.AVAILABLE_BIKES, currentListInView);
         } else {
-            populateGridPane(PopulateType.AvailableBikes, availableBikes);
+            populateGridPane(PopulateType.AVAILABLE_BIKES, availableBikes);
         }
     }
 
@@ -140,7 +137,7 @@ public class MainVewController implements Initializable {
         gridPane.getChildren().clear();
         returnBtn.setVisible(false);
         currentTypeInView = type;
-        if (type == PopulateType.AvailableBikes) {
+        if (type == PopulateType.AVAILABLE_BIKES) {
             if (availableBikes.size() <= 3) {
                 netBtn.setVisible(false);
             } else {
@@ -148,7 +145,7 @@ public class MainVewController implements Initializable {
                 netBtn.setVisible(true);
             }
         }
-        if (type == PopulateType.UsersCurrentBikes) {
+        if (type == PopulateType.USERS_CURRENT_BIKES) {
             if (usersCurrentBikes.size() <= 3) {
                 netBtn.setVisible(false);
             } else {
@@ -278,13 +275,13 @@ public class MainVewController implements Initializable {
     public void nextBikesOnList(ActionEvent actionEvent) {
         gridPane.getChildren().clear();
         currentListInView.clear();
-        if (currentTypeInView == PopulateType.AvailableBikes) {
+        if (currentTypeInView == PopulateType.AVAILABLE_BIKES) {
             if (availableBikes.size() >= 3) {
                 currentListInView = availableBikes.subList(0, 3);
             } else {
                 currentListInView = availableBikes.subList(0, availableBikes.size());
             }
-        } else if (currentTypeInView == PopulateType.UsersCurrentBikes) {
+        } else if (currentTypeInView == PopulateType.USERS_CURRENT_BIKES) {
             if (usersCurrentBikes.size() >= 3) {
                 currentListInView = usersCurrentBikes.subList(0, 3);
             } else {
@@ -308,7 +305,7 @@ public class MainVewController implements Initializable {
             rentedBike.setAvailable(false);
             List<Bike> bikeList = new ArrayList<>();
             bikeList.add(rentedBike);
-            populateGridPane(PopulateType.RentedBike,bikeList);
+            populateGridPane(PopulateType.RENTED_BIKE,bikeList);
             //TODO tänk hut hur userTextGUI ska populeras
             //populateUserTextInGUI(currentUser);
             setStatLabel();
@@ -342,7 +339,7 @@ public class MainVewController implements Initializable {
                 selectedBikeSearch = serverCall.getSingleBike(bikeID);
                 List<Bike> bike = new ArrayList<>();
                 bike.add(selectedBikeSearch);
-                populateGridPane(PopulateType.SearchResults, bike);
+                populateGridPane(PopulateType.SEARCH_RESULTS, bike);
 
             }
         }
@@ -357,9 +354,9 @@ public class MainVewController implements Initializable {
 
         if (usersCurrentBikes.size() > 3) {
             currentListInView = usersCurrentBikes.subList(0, 3);
-            populateGridPane(PopulateType.UsersCurrentBikes, currentListInView);
+            populateGridPane(PopulateType.USERS_CURRENT_BIKES, currentListInView);
         } else {
-            populateGridPane(PopulateType.UsersCurrentBikes, usersCurrentBikes);
+            populateGridPane(PopulateType.USERS_CURRENT_BIKES, usersCurrentBikes);
         }
     }
 
@@ -377,9 +374,14 @@ public class MainVewController implements Initializable {
             returnedBike.setAvailable(true);
             List<Bike> bike = new ArrayList<>();
             bike.add(returnedBike);
-            populateGridPane(PopulateType.ReturnedBike, bike);
+            populateGridPane(PopulateType.RETURNED_BIKE, bike);
 
         }
+    }
+
+    public void closeSession(ActionEvent actionEvent) {
+        serverCall.closeSession();
+        Main.getSpider().getMain().showLoginView();
     }
 }
 

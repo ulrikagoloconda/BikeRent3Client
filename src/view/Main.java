@@ -65,20 +65,20 @@ public class Main extends Application {
         this.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 
             @Override
-            public void handle(WindowEvent event){
+            public void handle(WindowEvent event) {
                 serverCall.closeSession();
             }
         });
         user = new BikeUser();
         String urlString = "http://localhost:8080/text/resources";
-        Gson gson = new Gson();
+
 
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost requsetPost = new HttpPost(urlString);
         JsonObject jsonObject = new JsonObject();
 
-        jsonObject.addProperty("userName", "GoloGolo");
-        jsonObject.addProperty("passw", "GoloGolo");
+        jsonObject.addProperty("userName", "Ulrika");
+        jsonObject.addProperty("passw", "Ulrika");
         String valuePair = jsonObject.toString();
 
         HttpEntity entity = new StringEntity(valuePair);
@@ -86,14 +86,16 @@ public class Main extends Application {
         requsetPost.addHeader("User-Agent123", USER_AGENT);
         HttpResponse response = client.execute(requsetPost);
         System.out.println("Code " + response.getStatusLine().getStatusCode());
+        //TODO borde kolla att det är status 200, annars händer nåt bäääd
         String json = EntityUtils.toString(response.getEntity());
         System.out.println(json);
-      mvi  = gson.fromJson(json, MainViewInformaiton.class);
+        Gson gson = new Gson();
+        mvi = gson.fromJson(json, MainViewInformaiton.class);
         user = mvi.getCurrentUser();
-        System.out.println("json " + user.getCurrentBikeLoans() + " " + json);
+        System.out.println("json " + user + " " + json);
     }
     //TODO ta bort denna metod, en tillfällig lösning för att jobba med mianView
-    public BikeUser tempMetod(){
+    public BikeUser tempMetodGetCurrentUser(){
         return user;
     }
     public MainViewInformaiton getMainVI(){
