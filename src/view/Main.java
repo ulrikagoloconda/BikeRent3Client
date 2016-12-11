@@ -69,7 +69,7 @@ public class Main extends Application {
                 serverCall.closeSession();
             }
         });
-        user = new BikeUser();
+        /*user = new BikeUser();
         String urlString = "http://localhost:8080/text/resources";
 
 
@@ -92,7 +92,7 @@ public class Main extends Application {
         Gson gson = new Gson();
         mvi = gson.fromJson(json, MainViewInformaiton.class);
         user = mvi.getCurrentUser();
-        System.out.println("json " + user + " " + json);
+        System.out.println("user " + user ); */
     }
     //TODO ta bort denna metod, en tillfällig lösning för att jobba med mianView
     public BikeUser tempMetodGetCurrentUser(){
@@ -229,6 +229,16 @@ public class Main extends Application {
             primaryStage.setScene(addBikeScene);
         }
     }
+    public MainViewInformaiton getMvi() {
+        return mvi;
+    }
+
+    public void setMvi(MainViewInformaiton mvi) {
+        this.mvi = mvi;
+        System.out.println("mvi setts");
+
+    }
+
     public static void main(String[] args) {
         launch(args);
 
