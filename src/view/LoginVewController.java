@@ -1,6 +1,10 @@
 package view;
 
 
+import ServerConnecttion.ServerCall;
+import ServerConnecttion.ServerCallImpl;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import model.BikeUser;
 import helpers.Sound;
 import javafx.event.ActionEvent;
@@ -11,10 +15,22 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import model.MainViewInformaiton;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+
+import static org.apache.http.HttpHeaders.USER_AGENT;
 
 //import static model.DBUtil.processException;
 
@@ -32,18 +48,26 @@ public class LoginVewController implements Initializable {
     private AnchorPane loginPane;
     private BikeUser currentUser;
 
+    private ServerCall serverCall;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Main.getSpider().setLoginView(this);
+        serverCall = new ServerCallImpl();
   }
 
     public void logInClick(Event event) {
         String userName = userNameText.getText();
-        String password = passwordText.getText();
-       // TODO hårdkodad lösning som behöver ändras
-        MainViewInformaiton vfi = new MainViewInformaiton();
+        String passw = passwordText.getText();
+        currentUser = serverCall.login( userName,  passw);
 
-        showMainGui();
+        if(currentUser.getUserID() > 0){ //login = OK!!
+            showMainGui();
+        }else { // wrong ...
+            System.out.println("Fel ...");
+           }
+
+
 
      /*   try {
             currentUser = dbAccess.logIn(userName, password);
