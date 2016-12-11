@@ -9,8 +9,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.BikeUser;
@@ -77,8 +75,10 @@ public class Main extends Application {
         HttpPost requsetPost = new HttpPost(urlString);
         JsonObject jsonObject = new JsonObject();
 
-        jsonObject.addProperty("userName", "Ulrika");
-        jsonObject.addProperty("passw", "Ulrika");
+        //jsonObject.addProperty("userName", "Ulrika");
+        //jsonObject.addProperty("passw", "Ulrika");
+        jsonObject.addProperty("userName", "ost1");
+        jsonObject.addProperty("passw", "ost1");
         String valuePair = jsonObject.toString();
 
         HttpEntity entity = new StringEntity(valuePair);
@@ -92,7 +92,7 @@ public class Main extends Application {
         Gson gson = new Gson();
         mvi = gson.fromJson(json, MainViewInformaiton.class);
         user = mvi.getCurrentUser();
-        System.out.println("json " + user + " " + json);
+        System.out.println("user " + user);
     }
     //TODO ta bort denna metod, en tillfällig lösning för att jobba med mianView
     public BikeUser tempMetodGetCurrentUser(){

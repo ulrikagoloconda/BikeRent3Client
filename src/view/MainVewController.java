@@ -73,14 +73,9 @@ public class MainVewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Main.getSpider().setMainView(this);
-        //TODO ta b ort detta när login är klar
         user = Main.getSpider().getMain().tempMetodGetCurrentUser();
-        mvi = new MainViewInformaiton();
-        mvi.setCurrentUser(user);
-        mvi.setRentedBikes(5);
-        mvi.setTotalBikes(20);
-        populateUserTextInGUI(mvi.getCurrentUser());
-        if (mvi.getCurrentUser().getMemberLevel() != 10) {
+        populateUserTextInGUI(user);
+        if (user.getMemberLevel() != 10) {
             adminBtn.setVisible(false);
         }
         netBtn.setDisable(true);
@@ -94,6 +89,7 @@ public class MainVewController implements Initializable {
 
     public void populateUserTextInGUI(BikeUser bikeUser) {
         ArrayList<Bike> bikesInUse = user.getCurrentBikeLoans();
+      System.out.println(user.getCurrentBikeLoans() + " i MinaVIewController populate ");
         ArrayList<Integer> totalBikes = user.getTotalBikeLoans();
         userNameLabel.setText(bikeUser.getUserName());
         memberLevelLabel.setText("* " + bikeUser.getMemberLevel() + " *");

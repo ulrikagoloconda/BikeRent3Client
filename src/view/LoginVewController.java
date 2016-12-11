@@ -71,7 +71,7 @@ public class LoginVewController implements Initializable {
             currentUser = new BikeUser();
             currentUser.setlName("Override");
             currentUser.setfName("Override");
-            currentUser.setUserName("Override");
+          currentUser.setUserName("Override");
             currentUser.setMemberLevel(1010);
             currentUser.setPhone(101010);
             currentUser.setEmail("Override@Override.com");
