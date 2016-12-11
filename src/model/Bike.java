@@ -3,6 +3,7 @@ package model;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -24,11 +25,10 @@ public class Bike{
   private String imageFileName;
   private LocalDate dayOfReturn;
   private LocalDate dayOfRent;
+    private byte[] arrayImage;
 
  private ByteArrayInputStream imageStream;
- /* private BufferedImage bufferedImage;
-  private FileInputStream fileInputImage;
-  */
+
 
 
 
@@ -152,6 +152,7 @@ public class Bike{
   }
 
   public ByteArrayInputStream getImageStream() {
+      imageStream.reset();
     return imageStream;
   }
 

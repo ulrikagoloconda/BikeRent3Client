@@ -1,15 +1,20 @@
 package view;
 
+import ServerConnecttion.ServerCall;
+import ServerConnecttion.ServerCallImpl;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.BikeUser;
+import model.MainViewInformaiton;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -40,12 +45,15 @@ public class Main extends Application {
     private Scene changeUserScene;
     private Scene newUserScene;
     private Scene statViewScean;
-    BikeUser user;
+    private BikeUser user;
+    private MainViewInformaiton mvi;
+    private ServerCall serverCall ;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         spider = new SpiderView();
         spider.setMain(this);
+        serverCall = new ServerCallImpl();
         this.primaryStage = primaryStage;
         loginLoader = new FXMLLoader(getClass().getResource("../view/viewfxml/loginView.fxml"));
         Parent root = loginLoader.load();
@@ -54,15 +62,23 @@ public class Main extends Application {
         this.primaryStage.setScene(loginScene);
         this.primaryStage.show();
 
+        this.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+            @Override
+            public void handle(WindowEvent event) {
+                serverCall.closeSession();
+            }
+        });
+        user = new BikeUser();
         String urlString = "http://localhost:8080/text/resources";
-        Gson gson = new Gson();
+
 
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost requsetPost = new HttpPost(urlString);
         JsonObject jsonObject = new JsonObject();
 
-        jsonObject.addProperty("userName", "GoloGolo");
-        jsonObject.addProperty("passw", "GoloGolo");
+        jsonObject.addProperty("userName", "Ulrika");
+        jsonObject.addProperty("passw", "Ulrika");
         String valuePair = jsonObject.toString();
 
         HttpEntity entity = new StringEntity(valuePair);
@@ -70,14 +86,20 @@ public class Main extends Application {
         requsetPost.addHeader("User-Agent123", USER_AGENT);
         HttpResponse response = client.execute(requsetPost);
         System.out.println("Code " + response.getStatusLine().getStatusCode());
+        //TODO borde kolla att det är status 200, annars händer nåt bäääd
         String json = EntityUtils.toString(response.getEntity());
         System.out.println(json);
-       user  = gson.fromJson(json, BikeUser.class);
-        System.out.println("json " + user.getCurrentBikeLoans() + " " + json);
+        Gson gson = new Gson();
+        mvi = gson.fromJson(json, MainViewInformaiton.class);
+        user = mvi.getCurrentUser();
+        System.out.println("json " + user + " " + json);
     }
     //TODO ta bort denna metod, en tillfällig lösning för att jobba med mianView
-    public BikeUser tempMetod(){
+    public BikeUser tempMetodGetCurrentUser(){
         return user;
+    }
+    public MainViewInformaiton getMainVI(){
+        return mvi;
     }
 
     public static SpiderView getSpider() {

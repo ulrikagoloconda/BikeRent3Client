@@ -109,6 +109,7 @@
             <Label id="memberLevelLabel" fx:id="statLabel" layoutX="511.0" layoutY="257.0" prefHeight="17.0" text="10" />
             <Label id="memberLevelLabel" layoutX="406.0" layoutY="257.0" prefHeight="17.0" text="Tillgängliga cyklar:" />
             <Button fx:id="returnBtn" layoutX="347.0" layoutY="586.0" mnemonicParsing="false" onAction="#returnBike" text="Återlämna cykeln" />
+            <Button layoutX="27.0" layoutY="586.0" mnemonicParsing="false" onAction="#closeSession" text="Logga ut" />
    
            </children>
        </AnchorPane>
