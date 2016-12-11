@@ -181,8 +181,37 @@ public class ServerCallImpl implements ServerCall {
 
     @Override
     public Bike addBikeToDB(Bike newBike) {
-        //TODO Ulrika: path = "..../newBike (skickas som en bike :-) ..)
-        return null;
+        urlString = "http://localhost:8080/text/resources/newBike";
+        try {
+            Gson gson = new Gson();
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpPost requsetPost = new HttpPost(urlString);
+            requsetPost.addHeader("Add_bike", USER_AGENT);
+            MainViewInformaiton mvi = new MainViewInformaiton();
+            String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
+            int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
+            BikeUser user = new BikeUser();
+            user.setSessionToken(token);
+            user.setUserID(userID);
+            mvi.setCurrentUser(user);
+            mvi.setNewBike(newBike);
+            String json = gson.toJson(mvi);
+            HttpEntity entity = new StringEntity(json);
+            requsetPost.setEntity(entity);
+            HttpResponse response = client.execute(requsetPost);
+            System.out.println("Code " + response.getStatusLine().getStatusCode());
+         if(response.getStatusLine().getStatusCode() == 200) {
+             String returnedJson = EntityUtils.toString(response.getEntity());
+             Gson gson1 = new Gson();
+           Bike returnedBike = gson1.fromJson(returnedJson,Bike.class);
+             return returnedBike;
+         } else {
+             return null;
+         }
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

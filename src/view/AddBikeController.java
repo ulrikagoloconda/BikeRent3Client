@@ -1,5 +1,7 @@
 package view;
 
+import ServerConnecttion.ServerCall;
+import ServerConnecttion.ServerCallImpl;
 import model.Bike;
 import model.BikeUser;
 import javafx.event.ActionEvent;
@@ -12,8 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
-//import org.apache.commons.io.FileUtils;
-
+import org.apache.commons.io.FileUtils;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +30,6 @@ public class AddBikeController implements Initializable {
 
   private Bike newBike;
   private LoginVewController loginView;
-  private BikeUser currentUser;
   //private BikesFifoue newBikesFifoue;
   @FXML
   private Label urlLabel, messageLabel;
@@ -43,10 +43,11 @@ public class AddBikeController implements Initializable {
   private Pane editPane;
   @FXML
   private Button btnQueRunner;
-
+  private ServerCall serverCall;
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     Main.getSpider().setAddBikeView(this);
+    serverCall = new ServerCallImpl();
   }
 
   public void showDeleteView(ActionEvent actionEvent) {
@@ -56,7 +57,7 @@ public class AddBikeController implements Initializable {
 
   public void addBike(ActionEvent actionEvent) {
     prepairBikeForAdd();
-   // AccessBike.insertNewBike(newBike);
+    serverCall.addBikeToDB(newBike);
     brandText.setText("");
     modelYearText.setText("");
     colorText.setText("");
@@ -73,15 +74,15 @@ public class AddBikeController implements Initializable {
     FileChooser fc = new FileChooser();
     File selected = fc.showOpenDialog(null);
     urlLabel.setText(selected.getName());
-   /* if (selected != null) {
+   if (selected != null) {
       try {
-        ByteArrayInputStream in = new ByteArrayInputStream(FileUtils.readFileToByteArray(selected));
+       ByteArrayInputStream in = new ByteArrayInputStream(FileUtils.readFileToByteArray(selected));
         newBike.setImageStream(in);
-        newBike.setCreatedBy(currentUser);
+        newBike.setCreatedByUserID(Main.getSpider().getMain().getMvi().getCurrentUser().getUserID());
       } catch (IOException e) {
         e.printStackTrace();
       }
-    }*/
+    }
   }
 
   public void showMainGui(ActionEvent actionEvent) {
@@ -106,7 +107,6 @@ public class AddBikeController implements Initializable {
     if (newBike.equals(null)) {
       newBike = new Bike();
     } else {
-
       if (brandText.getText().length() > 0) {
         newBike.setBrandName(brandText.getText());
       }
