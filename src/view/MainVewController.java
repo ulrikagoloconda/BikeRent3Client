@@ -59,7 +59,7 @@ public class MainVewController implements Initializable {
     private ArrayList<Bike> availableBikes;
     private List<Bike> currentListInView;
     private PopulateType currentTypeInView;
-    private BikeUser user;
+    private BikeUser currentUser;
     private MainViewInformaiton mvi;
     private Map<String, Integer> searchMap;
     private Bike selectedBikeSearch;
@@ -73,14 +73,15 @@ public class MainVewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Main.getSpider().setMainView(this);
-        //TODO ta b ort detta när login är klar
-        user = Main.getSpider().getMain().tempMetodGetCurrentUser();
-        mvi = new MainViewInformaiton();
-        mvi.setCurrentUser(user);
-        mvi.setRentedBikes(5);
-        mvi.setTotalBikes(20);
-        populateUserTextInGUI(mvi.getCurrentUser());
-        if (mvi.getCurrentUser().getMemberLevel() != 10) {
+        currentUser = Main.getSpider().getMain().getMvi().getCurrentUser();
+        System.out.println("initialize, currentUser =  " + currentUser.getfName());
+        //mvi = new MainViewInformaiton();
+        //mvi.setCurrentUser(currentUser);
+        //mvi.setRentedBikes(5);
+        //mvi.setTotalBikes(20);
+
+        populateUserTextInGUI(currentUser);
+        if (currentUser.getMemberLevel() != 10) {
             adminBtn.setVisible(false);
         }
         netBtn.setDisable(true);
@@ -93,8 +94,8 @@ public class MainVewController implements Initializable {
     }
 
     public void populateUserTextInGUI(BikeUser bikeUser) {
-        ArrayList<Bike> bikesInUse = user.getCurrentBikeLoans();
-        ArrayList<Integer> totalBikes = user.getTotalBikeLoans();
+        ArrayList<Bike> bikesInUse = currentUser.getCurrentBikeLoans();
+        ArrayList<Integer> totalBikes = currentUser.getTotalBikeLoans();
         userNameLabel.setText(bikeUser.getUserName());
         memberLevelLabel.setText("* " + bikeUser.getMemberLevel() + " *");
         activeLoanLabel.setText("" + bikesInUse.size());
@@ -105,6 +106,7 @@ public class MainVewController implements Initializable {
     }
 
     private void setStatLabel() {
+        mvi = Main.getSpider().getMain().getMvi();
         float total = mvi.getTotalBikes();
         float free = total - mvi.getRentedBikes();
         System.out.println("free" + " " + free);
@@ -350,7 +352,7 @@ public class MainVewController implements Initializable {
     }
 
     public void showUsersBikes(ActionEvent actionEvent) {
-        usersCurrentBikes = user.getCurrentBikeLoans();
+        usersCurrentBikes = currentUser.getCurrentBikeLoans();
 
         if (usersCurrentBikes.size() > 3) {
             currentListInView = usersCurrentBikes.subList(0, 3);
