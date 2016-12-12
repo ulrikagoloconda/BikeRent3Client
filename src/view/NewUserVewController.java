@@ -42,6 +42,7 @@ public class NewUserVewController implements Initializable {
   private ServerCallImpl serverCall;
 
   public NewUserVewController() {
+    serverCall = new ServerCallImpl();
   }
 
   @Override
@@ -110,6 +111,7 @@ public class NewUserVewController implements Initializable {
         System.out.println("we can now add some info");
         int in_memberlevel = 1;
         BikeUser newUser = new BikeUser(fName, lName, in_memberlevel, email, phone, userName, password);
+        System.out.println(serverCall + " serverCall");
         boolean isAddUserOK = serverCall.createNewUser(newUser);
             //dbAccess.InsertNewUser(fName, lName, in_memberlevel, email, phone, userName, password);
         if (!isAddUserOK) {

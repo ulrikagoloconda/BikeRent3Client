@@ -58,10 +58,10 @@ public class ChangeUserController1 implements Initializable {
         String passwordChecker = passwordCheckerText.getText();
         phoneString.replace("-", "");
         phoneString.replace("+", "");
-      /*  try {
+    /*   try {
             if (userName.length() < 5) {
                 System.out.println("username to short");
-                //  ErrorView.showError(errorTitle, "fel vid uppdatering", "Kontrollera era uppgifter", userID, new IOException("username is to short!"));
+                  ErrorView.showError(errorTitle, "fel vid uppdatering", "Kontrollera era uppgifter", userID, new IOException("username is to short!"));
             } else {
                 int phone = Integer.parseInt(phoneString);
                 System.out.println("we can now add some info");
