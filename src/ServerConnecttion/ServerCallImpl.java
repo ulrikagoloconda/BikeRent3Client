@@ -216,8 +216,37 @@ public class ServerCallImpl implements ServerCall {
 
     @Override
     public boolean removeBikeFromDB(int bikeID) {
-        //TODO Ulrika: path = "..../RemoveBike (skickas som en bikeId eller liknande :-) ..)
-        return false;
+        urlString = "http://localhost:8080/text/resources/removeBike";
+        try {
+            Gson gson = new Gson();
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpGet requsetGet = new HttpGet(urlString);
+            requsetGet.addHeader("remove_bike", USER_AGENT);
+
+            String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
+            int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
+            requsetGet.
+            user.setSessionToken(token);
+            user.setUserID(userID);
+            mvi.setCurrentUser(user);
+            mvi.setNewBike(newBike);
+            String json = gson.toJson(mvi);
+            HttpEntity entity = new StringEntity(json);
+            requsetPost.setEntity(entity);
+            HttpResponse response = client.execute(requsetPost);
+            System.out.println("Code " + response.getStatusLine().getStatusCode());
+            if(response.getStatusLine().getStatusCode() == 200) {
+                String returnedJson = EntityUtils.toString(response.getEntity());
+                Gson gson1 = new Gson();
+                Bike returnedBike = gson1.fromJson(returnedJson,Bike.class);
+                return returnedBike;
+            } else {
+                return null;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
