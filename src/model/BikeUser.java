@@ -34,6 +34,15 @@ public class BikeUser {
         this.phone = phone;
         this.memberSince = memberSince;
     }
+    public BikeUser(String fName, String lName, int in_memberlevel, String email, int phone, String userName, String password){
+    this.fName = fName;
+    this.lName = lName;
+    this.memberLevel = in_memberlevel;
+    this.email = email;
+    this.phone = phone;
+    this.userName = userName;
+    this.passw = password;
+  }
 
     public int getUserID() {
         return userID;
