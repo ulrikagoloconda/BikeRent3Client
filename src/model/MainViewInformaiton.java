@@ -13,6 +13,7 @@ public class MainViewInformaiton {
     private BikeUser oldUser;
     private BikeUser alteredUser;
     private Bike newBike;
+    private Bikes bikes;
 
 
     public MainViewInformaiton(){
@@ -89,5 +90,13 @@ public class MainViewInformaiton {
 
     public void setNewBike(Bike newBike) {
         this.newBike = newBike;
+    }
+
+    public Bikes getBikes() {
+        return bikes;
+    }
+
+    public void setBikes(Bikes bikes) {
+        this.bikes = bikes;
     }
 }
