@@ -4,7 +4,6 @@ import model.Bike;
 import model.BikeUser;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,7 +35,7 @@ public interface ServerCall {
     Bike addBikeToDB(Bike newBike);
 
     //Metoden raderar en cykel från databasen
-    boolean removeBikeFromDB(int bikeID);
+    String removeBikeFromDB(int bikeID);
 
     //Metoden utför ett cykellån, till i restanropet finns också ett user id som hämtas från en global variabel
     Bike executeBikeLoan(int bikeID);
@@ -50,4 +49,5 @@ public interface ServerCall {
     //Metoden stänger en öppen session i databasen och sätter variabeln sessionToken till -1 som sträng
     void closeSession();
 
+    ArrayList<Bike> getAllBikes();
 }

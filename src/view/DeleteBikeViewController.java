@@ -1,5 +1,7 @@
 package view;
 
+import ServerConnecttion.ServerCall;
+import ServerConnecttion.ServerCallImpl;
 import model.Bike;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -22,11 +24,11 @@ import java.util.*;
  * @since 2016-09-19
  */
 
-public class DeleteBikeViewController implements Initializable{
+public class DeleteBikeViewController implements Initializable {
     @FXML
     private GridPane gridDelBike;
     @FXML
-    private Label deleteLabel;
+    private Label deleteLabel, messLabel;
     @FXML
     private Button deleteBikeBtn, forwardBtn, backToMain;
     @FXML
@@ -37,22 +39,25 @@ public class DeleteBikeViewController implements Initializable{
     private int bikeIdDel;
     private int lastIndex;
     private List<Bike> smallList;
+    private ServerCall serverCall;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Main.getSpider().setDeleteView(this);
+        serverCall = new ServerCallImpl();
         idMap = new HashMap<>();
         deleteBikeBtn.setVisible(false);
         backToMain.setVisible(true);
         initDeleteView();
+
     }
 
 
     public void initDeleteView() {
-
-       // allBikes = dbAccess.getAllBikes();
-        if (allBikes.size() > 10){
-             smallList = allBikes.subList(0, 9);
+        System.out.println(allBikes + " " + serverCall);
+        allBikes = serverCall.getAllBikes();
+        if (allBikes.size() > 10) {
+            smallList = allBikes.subList(0, 9);
             populateDeleteGrid(smallList);
             forwardBtn.setDisable(false);
         } else {
@@ -76,9 +81,9 @@ public class DeleteBikeViewController implements Initializable{
             values.clear();
             values.add("" + b.getBikeID());
             values.add(b.getBrandName());
-            values.add(""+b.getModelYear());
-            values.add(""+b.getSize());
-            values.add( b.getColor());
+            values.add("" + b.getModelYear());
+            values.add("" + b.getSize());
+            values.add(b.getColor());
             values.add(b.getType());
 
             for (int i = 0; i < 6; i++) {
@@ -99,46 +104,45 @@ public class DeleteBikeViewController implements Initializable{
                                 }
                             }
 
-              String s = selected.getBikeID() + " " + selected.getBrandName() + " " + selected.getModelYear() +
-                  " " + selected.getSize() + " " + selected.getColor() + " " + selected.getType();
-              deleteLabel.setText(s);
-              deleteBikeBtn.setVisible(true);
+                            String s = selected.getBikeID() + " " + selected.getBrandName() + " " + selected.getModelYear() +
+                                    " " + selected.getSize() + " " + selected.getColor() + " " + selected.getType();
+                            deleteLabel.setText(s);
+                            deleteBikeBtn.setVisible(true);
+                        }
+                    });
+
+                    idMap.put(k, b.getBikeID());
+                    gridDelBike.add(k, i, j);
+                    lastIndex = idMap.get(k);
+                }
             }
-          });
-
-          idMap.put(k, b.getBikeID());
-          gridDelBike.add(k, i, j);
-          lastIndex = idMap.get(k);
+            j++;
         }
-      }
-      j++;
     }
-  }
 
 
-  public void deleteBike(Event event) {
-      //  boolean b = dbAccess.deleteBike(bikeIdDel);
-      //if (b) {
-          deletePane.setVisible(false);
+    public void deleteBike(Event event) {
+        String mess = serverCall.removeBikeFromDB(bikeIdDel);
+        messLabel.setText(mess);
+        deletePane.setVisible(false);
 
-     // }
-  }
+    }
 
     public void nextView(ActionEvent actionEvent) {
         gridDelBike.getChildren().clear();
         smallList.clear();
-            if (allBikes.size() > 10) {
-                smallList = allBikes.subList(0, 9);
-                populateDeleteGrid(smallList);
-            } else {
-                smallList = allBikes.subList(0, allBikes.size() - 1);
-                populateDeleteGrid(smallList);
-                forwardBtn.setDisable(true);
-            }
+        if (allBikes.size() > 10) {
+            smallList = allBikes.subList(0, 9);
+            populateDeleteGrid(smallList);
+        } else {
+            smallList = allBikes.subList(0, allBikes.size() - 1);
+            populateDeleteGrid(smallList);
+            forwardBtn.setDisable(true);
+        }
     }
 
 
-  public void showMainView(ActionEvent actionEvent) {
-    Main.getSpider().getLoginView().showMainGui();
-  }
+    public void showMainView(ActionEvent actionEvent) {
+        Main.getSpider().getLoginView().showMainGui();
+    }
 }

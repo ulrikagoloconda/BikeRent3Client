@@ -12,6 +12,8 @@ public class MainViewInformaiton {
     private int bikeToRentID;
     private BikeUser oldUser;
     private BikeUser alteredUser;
+    private Bike newBike;
+    private Bikes bikes;
 
 
     public MainViewInformaiton(){
@@ -80,5 +82,21 @@ public class MainViewInformaiton {
 
     public void setAlteredUser(BikeUser alteredUser) {
         this.alteredUser = alteredUser;
+    }
+
+    public Bike getNewBike() {
+        return newBike;
+    }
+
+    public void setNewBike(Bike newBike) {
+        this.newBike = newBike;
+    }
+
+    public Bikes getBikes() {
+        return bikes;
+    }
+
+    public void setBikes(Bikes bikes) {
+        this.bikes = bikes;
     }
 }

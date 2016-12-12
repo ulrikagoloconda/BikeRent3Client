@@ -181,14 +181,63 @@ public class ServerCallImpl implements ServerCall {
 
     @Override
     public Bike addBikeToDB(Bike newBike) {
-        //TODO Ulrika: path = "..../newBike (skickas som en bike :-) ..)
-        return null;
+        urlString = "http://localhost:8080/text/resources/newBike";
+        try {
+            Gson gson = new Gson();
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpPost requsetPost = new HttpPost(urlString);
+            requsetPost.addHeader("Add_bike", USER_AGENT);
+            MainViewInformaiton mvi = new MainViewInformaiton();
+            String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
+            int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
+            BikeUser user = new BikeUser();
+            user.setSessionToken(token);
+            user.setUserID(userID);
+            mvi.setCurrentUser(user);
+            mvi.setNewBike(newBike);
+            String json = gson.toJson(mvi);
+            HttpEntity entity = new StringEntity(json);
+            requsetPost.setEntity(entity);
+            HttpResponse response = client.execute(requsetPost);
+            System.out.println("Code " + response.getStatusLine().getStatusCode());
+         if(response.getStatusLine().getStatusCode() == 200) {
+             String returnedJson = EntityUtils.toString(response.getEntity());
+             Gson gson1 = new Gson();
+           Bike returnedBike = gson1.fromJson(returnedJson,Bike.class);
+             return returnedBike;
+         } else {
+             return null;
+         }
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
-    public boolean removeBikeFromDB(int bikeID) {
-        //TODO Ulrika: path = "..../RemoveBike (skickas som en bikeId eller liknande :-) ..)
-        return false;
+    public String removeBikeFromDB(int bikeID) {
+        urlString = "http://localhost:8080/text/resources/removeBike";
+        try {
+            HttpClient client = HttpClientBuilder.create().build();
+            String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
+            int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
+            urlString += "/"+userID+"/"+token+"/"+bikeID;
+            System.out.println(urlString);
+            HttpGet requsetGet = new HttpGet(urlString);
+            requsetGet.addHeader("remove_bike", USER_AGENT);
+            HttpResponse response = client.execute(requsetGet);
+            System.out.println("Code " + response.getStatusLine().getStatusCode());
+            if(response.getStatusLine().getStatusCode() == 200) {
+                String mess = EntityUtils.toString(response.getEntity());
+
+                return mess;
+            } else {
+                return "Något har gått fel";
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return "Något har gått fel";
+        }
     }
 
     @Override
@@ -289,5 +338,40 @@ public class ServerCallImpl implements ServerCall {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public ArrayList<Bike> getAllBikes() {
+        urlString = "http://localhost:8080/text/resources/getAllBikes";
+        try {
+            Gson gson = new Gson();
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpPost requsetPost = new HttpPost(urlString);
+            requsetPost.addHeader("getAllBikes", USER_AGENT);
+            String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
+            int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
+            int memberLevel = Main.getSpider().getMain().getMainVI().getCurrentUser().getMemberLevel();
+           JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("sessionToken", token);
+            jsonObject.addProperty("userID", userID);
+            jsonObject.addProperty("memberLevel",memberLevel );
+            HttpEntity entity = new StringEntity(jsonObject.toString());
+            requsetPost.setEntity(entity);
+            HttpResponse response = client.execute(requsetPost);
+            System.out.println("Code " + response.getStatusLine().getStatusCode());
+            if(response.getStatusLine().getStatusCode()==200) {
+                String returnedJson = EntityUtils.toString(response.getEntity());
+
+                Gson gson1 = new Gson();
+                Bikes bikes = gson1.fromJson(returnedJson, Bikes.class);
+                return bikes.getBikes();
+            }else {
+                return null;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
     }
 }
