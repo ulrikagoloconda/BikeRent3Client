@@ -4,7 +4,6 @@ import model.Bike;
 import model.BikeUser;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,12 +41,13 @@ public interface ServerCall {
     Bike executeBikeLoan(int bikeID);
 
     //Metoden upphäver ett lån och gör återigen cykeln tillgänglig för andra användare
-    boolean returnBike(Bike bikeToReturn);
+    Integer returnBike(int userID, int bikeID);
 
     //Metoden returnerar ett objekt av klassen Bike som hämtats från databasen baserat på cyeklens id
     Bike getSingleBike(int bikeID);
 
     //Metoden stänger en öppen session i databasen och sätter variabeln sessionToken till -1 som sträng
     void closeSession();
+
 
 }

@@ -295,10 +295,33 @@ public class ServerCallImpl implements ServerCall {
     }
 
     @Override
-    public boolean returnBike(Bike bikeToReturn) {
+    public Integer returnBike(int userID, int bikeID){
         //TODO Niklas: path = "..../ReturnLoanBike (skickas som en bikeId eller vad metoden kräver!! :-) ..)
-
-        return false;
+      Gson gson = new Gson();
+      Bikes bikes = null;
+      URL_STRING = URL_STRING + "/returnBike";
+      int isReturnOkID = 0;
+      try {
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpPost requsetPost = new HttpPost(URL_STRING);
+        requsetPost.addHeader("User-Agent123", USER_AGENT);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("bikeID", bikeID);
+        jsonObject.addProperty("userID", userID);
+        String valuePair = jsonObject.toString();
+        HttpEntity entity = new StringEntity(valuePair);
+        requsetPost.setEntity(entity);
+        HttpResponse response = client.execute(requsetPost);
+        System.out.println("Code " + response.getStatusLine().getStatusCode());
+        if(response.getStatusLine().getStatusCode()==200) {
+          String json = EntityUtils.toString(response.getEntity());
+          System.out.println(json);
+          isReturnOkID = gson.fromJson(json, Integer.class);
+        }
+        }catch (Exception e){
+        e.printStackTrace();
+      }
+      return isReturnOkID;
     }
 
     @Override
