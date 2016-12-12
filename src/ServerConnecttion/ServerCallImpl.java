@@ -35,7 +35,6 @@ public class ServerCallImpl implements ServerCall {
         //start: "try login"
         BikeUser user = new BikeUser();
         String urlString = URL_STRING;//"http://localhost:8080/text/resources";
-
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost requsetPost = new HttpPost(urlString);
         JsonObject jsonObject = new JsonObject();
@@ -72,6 +71,7 @@ public class ServerCallImpl implements ServerCall {
             httpResponseCode = 3;
         }
         if(httpResponseCode !=200){ //error in request or connection
+            //TODO hej Niklas! Här skulle jag vilja ha ett utskrivet stacktrace, det är lättare att söka fel i tycker jag
             System.out.println("Fel på path eller server..");
             ErrorView.showError("Inloggningsfel-serverCall", "fel vid inloggning", "Fail", 0,new Exception("httpResponseCode" + httpResponseCode + errorText));
         }else {
@@ -385,3 +385,4 @@ public class ServerCallImpl implements ServerCall {
         }
     }
 }
+

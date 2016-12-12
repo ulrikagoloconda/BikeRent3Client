@@ -59,6 +59,7 @@ public class ChangeUserController1 implements Initializable {
         phoneString.replace("-", "");
         phoneString.replace("+", "");
 
+
       boolean isAddUserOK = false;
       if (userName.length() < 5) {
                 System.out.println("username to short");
