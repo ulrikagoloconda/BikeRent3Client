@@ -75,11 +75,6 @@ public class MainVewController implements Initializable {
         Main.getSpider().setMainView(this);
         currentUser = Main.getSpider().getMain().getMvi().getCurrentUser();
         System.out.println("initialize, currentUser =  " + currentUser.getfName());
-        //mvi = new MainViewInformaiton();
-        //mvi.setCurrentUser(currentUser);
-        //mvi.setRentedBikes(5);
-        //mvi.setTotalBikes(20);
-
         populateUserTextInGUI(currentUser);
         if (currentUser.getMemberLevel() != 10) {
             adminBtn.setVisible(false);
@@ -318,17 +313,15 @@ public class MainVewController implements Initializable {
 
 
     public void popuateComboBox(Event event) {
-        if(combobox.getEditor().getText().length()>2) {
-            searchMap = serverCall.getBikesFromSearch(combobox.getEditor().getText());
-            int count = 0;
-            combobox.getItems().clear();
-            for (Map.Entry<String, Integer> entry : searchMap.entrySet()) {
-                if (count > 10) {
-                    break;
-                }
-                combobox.getItems().add(entry.getKey());
-                count++;
+        searchMap = serverCall.getBikesFromSearch(combobox.getEditor().getText());
+        int count = 0;
+        combobox.getItems().clear();
+        for (Map.Entry<String, Integer> entry : searchMap.entrySet()) {
+            if (count > 10) {
+                break;
             }
+            combobox.getItems().add(entry.getKey());
+            count++;
         }
     }
 

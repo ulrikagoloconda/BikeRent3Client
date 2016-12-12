@@ -361,7 +361,6 @@ public class ServerCallImpl implements ServerCall {
             System.out.println("Code " + response.getStatusLine().getStatusCode());
             if(response.getStatusLine().getStatusCode()==200) {
                 String returnedJson = EntityUtils.toString(response.getEntity());
-
                 Gson gson1 = new Gson();
                 Bikes bikes = gson1.fromJson(returnedJson, Bikes.class);
                 return bikes.getBikes();
