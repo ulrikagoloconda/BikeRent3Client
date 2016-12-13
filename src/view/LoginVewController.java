@@ -59,7 +59,6 @@ public class LoginVewController implements Initializable {
     public void logInClick(Event event) {
         String userName = userNameText.getText();
         String passw = passwordText.getText();
-       // TODO hårdkodad lösning som behöver ändras
         currentUser = serverCall.login( userName,  passw);
 
         if(currentUser.getUserID() > 0){ //login = OK!!
@@ -96,7 +95,7 @@ public class LoginVewController implements Initializable {
             currentUser = new BikeUser();
             currentUser.setlName("Override");
             currentUser.setfName("Override");
-            currentUser.setUserName("Override");
+          currentUser.setUserName("Override");
             currentUser.setMemberLevel(1010);
             currentUser.setPhone(101010);
             currentUser.setEmail("Override@Override.com");
