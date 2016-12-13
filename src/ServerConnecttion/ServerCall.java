@@ -41,7 +41,7 @@ public interface ServerCall {
     Bike executeBikeLoan(int bikeID);
 
     //Metoden upphäver ett lån och gör återigen cykeln tillgänglig för andra användare
-    Integer returnBike(int userID, int bikeID);
+    boolean returnBike(int userID, int bikeID);
 
     //Metoden returnerar ett objekt av klassen Bike som hämtats från databasen baserat på cyeklens id
     Bike getSingleBike(int bikeID);

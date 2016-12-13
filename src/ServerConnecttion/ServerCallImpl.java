@@ -169,8 +169,8 @@ public class ServerCallImpl implements ServerCall {
         String returnedJson = EntityUtils.toString(response.getEntity());
         System.out.println(returnedJson);
         Gson gson1 = new Gson();
-        boolean isUpdateOk = gson1.fromJson(returnedJson, boolean.class);
-        return isUpdateOk;
+        boolean isReturnOK = gson1.fromJson(returnedJson, boolean.class);
+        return isReturnOK;
       } catch (Exception e) {
         e.printStackTrace();
         return false;
@@ -295,12 +295,12 @@ public class ServerCallImpl implements ServerCall {
     }
 
     @Override
-    public Integer returnBike(int userID, int bikeID){
+    public boolean returnBike(int userID, int bikeID){
         //TODO Niklas: path = "..../ReturnLoanBike (skickas som en bikeId eller vad metoden kräver!! :-) ..)
       Gson gson = new Gson();
       Bikes bikes = null;
       URL_STRING = URL_STRING + "/returnBike";
-      int isReturnOkID = 0;
+      boolean isReturnOkID = false;
       try {
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost requsetPost = new HttpPost(URL_STRING);
@@ -316,7 +316,7 @@ public class ServerCallImpl implements ServerCall {
         if(response.getStatusLine().getStatusCode()==200) {
           String json = EntityUtils.toString(response.getEntity());
           System.out.println(json);
-          isReturnOkID = gson.fromJson(json, Integer.class);
+          isReturnOkID = gson.fromJson(json, boolean.class);
         }
         }catch (Exception e){
         e.printStackTrace();
