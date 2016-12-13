@@ -313,14 +313,25 @@ public class ServerCallImpl implements ServerCall {
         requsetPost.setEntity(entity);
         HttpResponse response = client.execute(requsetPost);
         System.out.println("Code " + response.getStatusLine().getStatusCode());
+        String code = response.getStatusLine().getStatusCode() + "";
         if(response.getStatusLine().getStatusCode()==200) {
           String json = EntityUtils.toString(response.getEntity());
           System.out.println(json);
           isReturnOkID = gson.fromJson(json, boolean.class);
+        }else {
+          ResponceCodeCecker.checkCode(code);
+          closeSession();
+          Main.getSpider().getMain().showLoginView();
         }
-        }catch (Exception e){
+      } catch (Exception e) {
         e.printStackTrace();
+        ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
+        closeSession();
+        Main.getSpider().getMain().showLoginView();
+        return false;
       }
+
+
       return isReturnOkID;
     }
 
