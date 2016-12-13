@@ -74,6 +74,9 @@ public class ServerCallImpl implements ServerCall {
             //TODO hej Niklas! Här skulle jag vilja ha ett utskrivet stacktrace, det är lättare att söka fel i tycker jag
             System.out.println("Fel på path eller server..");
             ErrorView.showError("Inloggningsfel-serverCall", "fel vid inloggning", "Fail", 0,new Exception("httpResponseCode" + httpResponseCode + errorText));
+          closeSession();
+          Main.getSpider().getMain().showLoginView();
+
         }else {
             Gson gson = new Gson();
             MainViewInformaiton mvi = gson.fromJson(json, MainViewInformaiton.class);
@@ -87,6 +90,8 @@ public class ServerCallImpl implements ServerCall {
             }else { // wrong password
                 System.out.println("Fel lösenord eller användarnam");
                 ErrorView.showError("Inloggningsfel", "fel vid inloggning", "Kontrollera era uppgifter", 0,new Exception(httpResponseCode + "Wrong user information." + errorText));
+              closeSession();
+              Main.getSpider().getMain().showLoginView();
             }
         }
         return null;
