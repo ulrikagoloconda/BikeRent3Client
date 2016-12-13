@@ -10,6 +10,7 @@ public class MainViewInformaiton {
     private String searchValue;
     private int singleBikeID;
     private int bikeToRentID;
+  private int bikeToReturnID;
     private BikeUser oldUser;
     private BikeUser alteredUser;
 
@@ -81,4 +82,15 @@ public class MainViewInformaiton {
     public void setAlteredUser(BikeUser alteredUser) {
         this.alteredUser = alteredUser;
     }
+
+  public int getBikeToReturnID() {
+    return bikeToReturnID;
+  }
+
+  public void setBikeToReturnID(int bikeToReturnID) {
+    this.bikeToReturnID = bikeToReturnID;
+  }
+
+
+
 }

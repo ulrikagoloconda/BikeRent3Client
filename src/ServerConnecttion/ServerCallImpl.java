@@ -301,23 +301,26 @@ public class ServerCallImpl implements ServerCall {
       Bikes bikes = null;
       URL_STRING = URL_STRING + "/returnBike";
       boolean isReturnOkID = false;
+      BikeUser user = new BikeUser();
+      user.setSessionToken(Main.getSpider().getMain().getMvi().getCurrentUser().getSessionToken());
+      user.setUserID(userID);
+      MainViewInformaiton mvi = new MainViewInformaiton();
+      mvi.setCurrentUser(user);
+      mvi.setBikeToReturnID(bikeID);
       try {
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost requsetPost = new HttpPost(URL_STRING);
         requsetPost.addHeader("User-Agent123", USER_AGENT);
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("bikeID", bikeID);
-        jsonObject.addProperty("userID", userID);
-        String valuePair = jsonObject.toString();
-        HttpEntity entity = new StringEntity(valuePair);
+        String jsonOut = gson.toJson(mvi);
+        HttpEntity entity = new StringEntity(jsonOut);
         requsetPost.setEntity(entity);
         HttpResponse response = client.execute(requsetPost);
         System.out.println("Code " + response.getStatusLine().getStatusCode());
         String code = response.getStatusLine().getStatusCode() + "";
         if(response.getStatusLine().getStatusCode()==200) {
-          String json = EntityUtils.toString(response.getEntity());
-          System.out.println(json);
-          isReturnOkID = gson.fromJson(json, boolean.class);
+          String jsonIn = EntityUtils.toString(response.getEntity());
+          System.out.println(jsonIn);
+          isReturnOkID = gson.fromJson(jsonIn, boolean.class);
         }else {
           ResponceCodeCecker.checkCode(code);
           closeSession();
