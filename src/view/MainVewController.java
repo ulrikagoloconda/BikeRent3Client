@@ -108,9 +108,11 @@ public class MainVewController implements Initializable {
   }
 
   private void setStatLabel() {
+
     mvi = Main.getSpider().getMain().getMvi();
     float total = mvi.getTotalBikes();
-    float free = total - mvi.getRentedBikes();
+    float free = mvi.getAvailableBikes();
+      System.out.println(" i mainVController stat total : " + total + " free " + free);
     System.out.println("free" + " " + free);
     System.out.println("tot: " + total);
     float poc = free / total;

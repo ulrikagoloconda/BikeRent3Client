@@ -301,7 +301,6 @@ public class ServerCallImpl implements ServerCall {
             System.out.println("Code " + response.getStatusLine().getStatusCode());
             if(response.getStatusLine().getStatusCode() == 200) {
                 String mess = EntityUtils.toString(response.getEntity());
-
                 return mess;
             } else {
                 return "Något har gått fel";
@@ -414,7 +413,8 @@ public class ServerCallImpl implements ServerCall {
 
     @Override
     public ArrayList<Bike> getAllBikes() {
-       String urlString = "http://localhost:8080/text/resources/getAllBikes";
+        String urlString = "http://localhost:8080/text/resources/getAllBikes";
+        Bikes bikes = null;
         try {
             Gson gson = new Gson();
             HttpClient client = HttpClientBuilder.create().build();
@@ -423,27 +423,40 @@ public class ServerCallImpl implements ServerCall {
             String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
             int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
             int memberLevel = Main.getSpider().getMain().getMainVI().getCurrentUser().getMemberLevel();
-           JsonObject jsonObject = new JsonObject();
+            JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("sessionToken", token);
             jsonObject.addProperty("userID", userID);
-            jsonObject.addProperty("memberLevel",memberLevel );
+            jsonObject.addProperty("memberLevel", memberLevel);
             HttpEntity entity = new StringEntity(jsonObject.toString());
             requsetPost.setEntity(entity);
             HttpResponse response = client.execute(requsetPost);
             System.out.println("Code " + response.getStatusLine().getStatusCode());
-            if(response.getStatusLine().getStatusCode()==200) {
+
+            String code = response.getStatusLine().getStatusCode() + "";
+            if (response.getStatusLine().getStatusCode() == 200) {
                 String returnedJson = EntityUtils.toString(response.getEntity());
                 Gson gson1 = new Gson();
-                Bikes bikes = gson1.fromJson(returnedJson, Bikes.class);
+                bikes = gson1.fromJson(returnedJson, Bikes.class);
                 return bikes.getBikes();
-            }else {
+            } else if (code.charAt(0) == '5') {
+                ErrorView.showError("Serverfel", "Fel hos servern ", "Försök igen senare", 0, new Exception(code + "Fel hos server." + ""));
+                closeSession();
+                Main.getSpider().getMain().showLoginView();
+            } else if (code.charAt(0) == '4') {
+                ErrorView.showError("Klientens kontakt med servern felar", "Ingen endpoint funnen " , "Försök igen senare", 0, new Exception(code + "Ingen endpoint funnen" + ""));
+                closeSession();
+                Main.getSpider().getMain().showLoginView();
+            } else {
                 return null;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
+            ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
+            closeSession();
+            Main.getSpider().getMain().showLoginView();
             return null;
         }
-
+        return bikes.getBikes();
     }
 }
 

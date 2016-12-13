@@ -49,5 +49,6 @@ public interface ServerCall {
     //Metoden stänger en öppen session i databasen och sätter variabeln sessionToken till -1 som sträng
     void closeSession();
 
+    //Meoden returnerar på samtliga cyklar som finn i databasen. Informationen används av admin då någon cykel ska raderas.
     ArrayList<Bike> getAllBikes();
 }

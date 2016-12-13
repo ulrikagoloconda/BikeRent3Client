@@ -6,7 +6,7 @@ package model;
 public class MainViewInformaiton {
     private BikeUser currentUser;
     private int totalBikes;
-    private int rentedBikes;
+    private int availableBikes;
     private String searchValue;
     private int singleBikeID;
     private int bikeToRentID;
@@ -36,12 +36,12 @@ public class MainViewInformaiton {
         this.totalBikes = totalBikes;
     }
 
-    public int getRentedBikes() {
-        return rentedBikes;
+    public int getAvailableBikes() {
+        return availableBikes;
     }
 
-    public void setRentedBikes(int rentedBikes) {
-        this.rentedBikes = rentedBikes;
+    public void setAvailableBikes(int availableBikes) {
+        this.availableBikes = availableBikes;
     }
 
     public String getSearchValue() {
