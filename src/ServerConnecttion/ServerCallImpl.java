@@ -75,6 +75,9 @@ public class ServerCallImpl implements ServerCall {
             //TODO hej Niklas! Här skulle jag vilja ha ett utskrivet stacktrace, det är lättare att söka fel i tycker jag
             System.out.println("Fel på path eller server..");
             ErrorView.showError("Inloggningsfel-serverCall", "fel vid inloggning", "Fail", 0,new Exception("httpResponseCode" + httpResponseCode + errorText));
+          closeSession();
+          Main.getSpider().getMain().showLoginView();
+
         }else {
             Gson gson = new Gson();
             MainViewInformaiton mvi = gson.fromJson(json, MainViewInformaiton.class);
@@ -88,6 +91,8 @@ public class ServerCallImpl implements ServerCall {
             }else { // wrong password
                 System.out.println("Fel lösenord eller användarnam");
                 ErrorView.showError("Inloggningsfel", "fel vid inloggning", "Kontrollera era uppgifter", 0,new Exception(httpResponseCode + "Wrong user information." + errorText));
+              closeSession();
+              Main.getSpider().getMain().showLoginView();
             }
         }
         return null;
@@ -170,8 +175,8 @@ public class ServerCallImpl implements ServerCall {
         String returnedJson = EntityUtils.toString(response.getEntity());
         System.out.println(returnedJson);
         Gson gson1 = new Gson();
-        boolean isUpdateOk = gson1.fromJson(returnedJson, boolean.class);
-        return isUpdateOk;
+        boolean isReturnOK = gson1.fromJson(returnedJson, boolean.class);
+        return isReturnOK;
       } catch (Exception e) {
         e.printStackTrace();
         return false;
@@ -344,10 +349,47 @@ public class ServerCallImpl implements ServerCall {
     }
 
     @Override
-    public boolean returnBike(Bike bikeToReturn) {
+    public boolean returnBike(int userID, int bikeID){
         //TODO Niklas: path = "..../ReturnLoanBike (skickas som en bikeId eller vad metoden kräver!! :-) ..)
-
+      Gson gson = new Gson();
+      Bikes bikes = null;
+      URL_STRING = URL_STRING + "/returnBike";
+      boolean isReturnOkID = false;
+      BikeUser user = new BikeUser();
+      user.setSessionToken(Main.getSpider().getMain().getMvi().getCurrentUser().getSessionToken());
+      user.setUserID(userID);
+      MainViewInformaiton mvi = new MainViewInformaiton();
+      mvi.setCurrentUser(user);
+      mvi.setBikeToReturnID(bikeID);
+      try {
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpPost requsetPost = new HttpPost(URL_STRING);
+        requsetPost.addHeader("User-Agent123", USER_AGENT);
+        String jsonOut = gson.toJson(mvi);
+        HttpEntity entity = new StringEntity(jsonOut);
+        requsetPost.setEntity(entity);
+        HttpResponse response = client.execute(requsetPost);
+        System.out.println("Code " + response.getStatusLine().getStatusCode());
+        String code = response.getStatusLine().getStatusCode() + "";
+        if(response.getStatusLine().getStatusCode()==200) {
+          String jsonIn = EntityUtils.toString(response.getEntity());
+          System.out.println(jsonIn);
+          isReturnOkID = gson.fromJson(jsonIn, boolean.class);
+        }else {
+          ResponceCodeCecker.checkCode(code);
+          closeSession();
+          Main.getSpider().getMain().showLoginView();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+        ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
+        closeSession();
+        Main.getSpider().getMain().showLoginView();
         return false;
+      }
+
+
+      return isReturnOkID;
     }
 
     @Override

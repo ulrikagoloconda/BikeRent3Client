@@ -29,7 +29,7 @@ public class ChangeUserController1 implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
        Main.getSpider().setChangeUserVewController(this);
-        currentUser = (Main.getSpider().getLoginView().getCurrentUser());
+        currentUser = (Main.getSpider().getMain().getMvi().getCurrentUser());
         errorTitle = "fel i uppdatera användare";
         userID = currentUser.getUserID();
         populateText();
@@ -60,7 +60,7 @@ public class ChangeUserController1 implements Initializable {
         phoneString.replace("+", "");
 
 
-      boolean isAddUserOK = false;
+      boolean isAlterUserOK = false;
       if (userName.length() < 5) {
                 System.out.println("username to short");
                   ErrorView.showError(errorTitle, "fel vid uppdatering", "Kontrollera era uppgifter", userID, new Exception("username is to short!"));
@@ -68,14 +68,14 @@ public class ChangeUserController1 implements Initializable {
               int phone = Integer.parseInt(phoneString);
               System.out.println("we can now add some info");
               int in_memberlevel = 1;
-              BikeUser newUser = new BikeUser(
+              BikeUser user = new BikeUser(
                   fName, lName, in_memberlevel, email, phone, userName, password);
-              isAddUserOK = serverCall.createNewUser(newUser);
+              isAlterUserOK = serverCall.updateUser(currentUser,user);
             }
-                if (!isAddUserOK) {
+                if (!isAlterUserOK) {
                     ErrorView.showError(errorTitle, "fel vid inläsning", "Kontrollera era uppgifter", userID, new Exception(" :-( kunde inte lägga till användare"));
                 }
-                if (isAddUserOK) {
+                if (isAlterUserOK) {
                     //boolean d = DialogView.showSimpleInfo("Ny användare upplaggd", "Lyckades", "Ny användare är nu upplagd");
                     Main.getSpider().getMain().showLoginView();
                 }

@@ -372,8 +372,8 @@ public class MainVewController implements Initializable {
         returnedBike = b;
       }
     }
-    boolean bool = serverCall.returnBike(returnedBike);
-    if (bool) {
+    boolean result = serverCall.returnBike(Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID(), returnedBike.getBikeID());
+    if (result!=true) {
       populateUserTextInGUI(mvi.getCurrentUser());
       setStatLabel();
       returnedBike.setAvailable(true);

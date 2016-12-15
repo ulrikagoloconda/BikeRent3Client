@@ -10,13 +10,13 @@ public class MainViewInformaiton {
     private String searchValue;
     private int singleBikeID;
     private int bikeToRentID;
+    private int bikeToReturnID;
     private BikeUser oldUser;
     private BikeUser alteredUser;
     private Bike newBike;
-    private Bikes bikes;
+    private int rentedBikes;
 
-
-    public MainViewInformaiton(){
+    public MainViewInformaiton() {
 
     }
 
@@ -68,6 +68,14 @@ public class MainViewInformaiton {
         this.bikeToRentID = bikeToRentID;
     }
 
+    public int getBikeToReturnID() {
+        return bikeToReturnID;
+    }
+
+    public void setBikeToReturnID(int bikeToReturnID) {
+        this.bikeToReturnID = bikeToReturnID;
+    }
+
     public BikeUser getOldUser() {
         return oldUser;
     }
@@ -92,11 +100,13 @@ public class MainViewInformaiton {
         this.newBike = newBike;
     }
 
-    public Bikes getBikes() {
-        return bikes;
+    public int getRentedBikes() {
+        return rentedBikes;
     }
 
-    public void setBikes(Bikes bikes) {
-        this.bikes = bikes;
+    public void setRentedBikes(int rentedBikes) {
+        this.rentedBikes = rentedBikes;
     }
 }
+
+
