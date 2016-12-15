@@ -108,7 +108,6 @@ public class MainVewController implements Initializable {
   }
 
   private void setStatLabel() {
-
     mvi = Main.getSpider().getMain().getMvi();
     float total = mvi.getTotalBikes();
     float free = mvi.getAvailableBikes();
@@ -127,8 +126,10 @@ public class MainVewController implements Initializable {
     executeLoanBtn.setDisable(true);
     netBtn.setVisible(false);
     availableBikes = serverCall.getAvailableBikes();
+    System.out.println("längd på sökt lista " + availableBikes.size());
     if (availableBikes.size() > 3) {
       currentListInView = availableBikes.subList(0, 3);
+      System.out.println("längden på currentListInView " + currentListInView.size());
       populateGridPane(PopulateType.AVAILABLE_BIKES, currentListInView);
     } else {
       populateGridPane(PopulateType.AVAILABLE_BIKES, availableBikes);
@@ -175,15 +176,17 @@ public class MainVewController implements Initializable {
         values.add(b.getColor());
         values.add(b.getType());
         values.add(b.getBrandName());
+        System.out.println("Varför är detta sant? " + b.isAvailable());
         values.add("" + b.isAvailable());
         System.out.println(b + " b " + bikeArray.size());
         for (int i = 0; i < 6; i++) {
           if (i == 0) {
             BufferedImage theImage = ImageIO.read(b.getImageStream());
             b.getImageStream().close();
-            System.out.println("the image "+theImage);
+            /*System.out.println("the image "+theImage);
             System.out.println(b);
             System.out.println(b.getImageStream());
+            */
             Image image = SwingFXUtils.toFXImage(theImage, null);
             ImageView iv = new ImageView();
             iv.setFitHeight(65);
@@ -229,7 +232,7 @@ public class MainVewController implements Initializable {
 
 
   public void onClickActions(Node n) {
-    if (selectedBikeSearch != null) {
+    if (currentTypeInView == PopulateType.SEARCH_RESULTS) {
       executeLoanBtn.setVisible(true);
       selectedFromGrid = selectedBikeSearch.getBikeID();
       String available = "";
@@ -245,7 +248,7 @@ public class MainVewController implements Initializable {
           selectedBikeSearch.getType() + " Ledig? " + available;
       messageLabel.setText(s);
       executeLoanBtn.setVisible(true);
-    } else if (usersCurrentBikes != null) {
+    } else if (currentTypeInView==PopulateType.USERS_CURRENT_BIKES) {
       selectedFromGrid = idMap.get(n);
       for (Bike b : usersCurrentBikes) {
         if (b.getBikeID() == selectedFromGrid) {
@@ -256,7 +259,7 @@ public class MainVewController implements Initializable {
         }
       }
 
-    } else {
+    } else if(currentTypeInView==PopulateType.AVAILABLE_BIKES) {
       selectedFromGrid = idMap.get(n);
       String available = "";
       for (Bike b : availableBikes) {
@@ -306,14 +309,13 @@ public class MainVewController implements Initializable {
     Bike b = serverCall.getSingleBike(selectedFromGrid);
     if(b.isAvailable()) {
       Bike rentedBike = serverCall.executeBikeLoan(b.getBikeID());
-
       messageLabel.setText("Cykeln är lånad till och med " + rentedBike.getDayOfReturn());
       rentedBike.setAvailable(false);
       List<Bike> bikeList = new ArrayList<>();
       bikeList.add(rentedBike);
       populateGridPane(PopulateType.RENTED_BIKE,bikeList);
-      //TODO tänk hut hur userTextGUI ska populeras
-      //populateUserTextInGUI(currentUser);
+      serverCall.fetchUpdatedInfo();
+      populateUserTextInGUI(Main.getSpider().getMain().getMvi().getCurrentUser());
       setStatLabel();
     }else {
       messageLabel.setText("Cykeln är tyvärr inte ledig");
@@ -374,7 +376,8 @@ public class MainVewController implements Initializable {
     }
     boolean result = serverCall.returnBike(Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID(), returnedBike.getBikeID());
     if (result!=true) {
-      populateUserTextInGUI(mvi.getCurrentUser());
+      serverCall.fetchUpdatedInfo();
+      populateUserTextInGUI(Main.getSpider().getMain().getMainVI().getCurrentUser());
       setStatLabel();
       returnedBike.setAvailable(true);
       List<Bike> bike = new ArrayList<>();

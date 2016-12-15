@@ -2,6 +2,7 @@ package ServerConnecttion;
 
 import model.Bike;
 import model.BikeUser;
+import model.MainViewInformaiton;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -51,5 +52,8 @@ public interface ServerCall {
 
     //Meoden returnerar på samtliga cyklar som finn i databasen. Informationen används av admin då någon cykel ska raderas.
     ArrayList<Bike> getAllBikes();
+
+    //Metoden hämtar data för att kunna uppdater huvudfönstrets statistk och användaruppgifter
+    MainViewInformaiton fetchUpdatedInfo();
 
 }
