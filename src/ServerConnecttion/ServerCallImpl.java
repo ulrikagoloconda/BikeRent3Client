@@ -260,6 +260,7 @@ public class ServerCallImpl implements ServerCall {
     @Override
     public Bike addBikeToDB(Bike newBike) {
         String urlString = "http://localhost:8080/text/resources/newBike";
+        Bike returnedBike = null;
         try {
             Gson gson = new Gson();
             HttpClient client = HttpClientBuilder.create().build();
@@ -278,23 +279,28 @@ public class ServerCallImpl implements ServerCall {
             requsetPost.setEntity(entity);
             HttpResponse response = client.execute(requsetPost);
             System.out.println("Code " + response.getStatusLine().getStatusCode());
+            String code = response.getStatusLine().getStatusCode()+"";
             if (response.getStatusLine().getStatusCode() == 200) {
                 String returnedJson = EntityUtils.toString(response.getEntity());
                 Gson gson1 = new Gson();
-                Bike returnedBike = gson1.fromJson(returnedJson, Bike.class);
+                 returnedBike = gson1.fromJson(returnedJson, Bike.class);
                 return returnedBike;
             } else {
-                return null;
-            }
+                ResponceCodeCecker.checkCode(code);
+          }
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
+            closeSession();
+            Main.getSpider().getMain().showLoginView();
         }
+        return returnedBike;
     }
 
     @Override
     public String removeBikeFromDB(int bikeID) {
         String urlString = "http://localhost:8080/text/resources/removeBike";
+        String mess = "Något har gått fel";
         try {
             HttpClient client = HttpClientBuilder.create().build();
             String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
@@ -305,16 +311,20 @@ public class ServerCallImpl implements ServerCall {
             requsetGet.addHeader("remove_bike", USER_AGENT);
             HttpResponse response = client.execute(requsetGet);
             System.out.println("Code " + response.getStatusLine().getStatusCode());
+            String code = response.getStatusLine().getStatusCode()+"";
             if (response.getStatusLine().getStatusCode() == 200) {
-                String mess = EntityUtils.toString(response.getEntity());
+                mess = EntityUtils.toString(response.getEntity());
                 return mess;
             } else {
-                return "Något har gått fel";
+                ResponceCodeCecker.checkCode(code);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return "Något har gått fel";
+            ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
+            closeSession();
+            Main.getSpider().getMain().showLoginView();
         }
+        return mess;
     }
 
     @Override
@@ -338,6 +348,7 @@ public class ServerCallImpl implements ServerCall {
             requsetPost.setEntity(entity);
             HttpResponse response = client.execute(requsetPost);
             System.out.println("Code " + response.getStatusLine().getStatusCode());
+            String code = response.getStatusLine().getStatusCode() + "";
             String returnedJson = EntityUtils.toString(response.getEntity());
             System.out.println(returnedJson);
             Gson gson1 = new Gson();
