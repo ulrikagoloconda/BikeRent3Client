@@ -2,6 +2,7 @@ package ServerConnecttion;
 
 import model.Bike;
 import model.BikeUser;
+import model.MainViewInformaiton;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -41,7 +42,7 @@ public interface ServerCall {
     Bike executeBikeLoan(int bikeID);
 
     //Metoden upphäver ett lån och gör återigen cykeln tillgänglig för andra användare
-    boolean returnBike(Bike bikeToReturn);
+    boolean returnBike(int userID, int bikeID);
 
     //Metoden returnerar ett objekt av klassen Bike som hämtats från databasen baserat på cyeklens id
     Bike getSingleBike(int bikeID);
@@ -49,5 +50,10 @@ public interface ServerCall {
     //Metoden stänger en öppen session i databasen och sätter variabeln sessionToken till -1 som sträng
     void closeSession();
 
+    //Meoden returnerar på samtliga cyklar som finn i databasen. Informationen används av admin då någon cykel ska raderas.
     ArrayList<Bike> getAllBikes();
+
+    //Metoden hämtar data för att kunna uppdater huvudfönstrets statistk och användaruppgifter
+    MainViewInformaiton fetchUpdatedInfo();
+
 }

@@ -71,9 +71,9 @@ public class StatViewController implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     Main.getSpider().setStatViewContrller(this);
-    //StatView.DoughnutChartView("Lediga cyklar",availableBikesStatistic(),"Upptagna cyklar", (100-availableBikesStatistic()) );
-    //StatView.DoughnutChartView("Lediga cyklar",25,"Upptagna cyklar", (100-25) );
-    //StatView.showStatView("Lediga cyklar", availableBikesStatistic(), "Upptagna cyklar", (100 - availableBikesStatistic()), pieChart);
+   //StatView.DoughnutChartView("Lediga cyklar",availableBikesStatistic(),"Upptagna cyklar", (100-availableBikesStatistic()) );
+    StatView.DoughnutChartView("Lediga cyklar",25,"Upptagna cyklar", (100-25) );
+    StatView.showStatView("Lediga cyklar", availableBikesStatistic(), "Upptagna cyklar", (100 - availableBikesStatistic()), pieChart);
   }
 
   private void updateStatLabel() {
@@ -81,10 +81,8 @@ public class StatViewController implements Initializable {
   }
 
   public float availableBikesStatistic() {
-   /* System.out.println(dbaccess + " dbaccess ");
-    float part = dbaccess.selectAvailableBikes().size();
-
-    float total = dbaccess.getAllBikes().size();
+    float part = Main.getSpider().getMain().getMvi().getAvailableBikes();
+    float total = Main.getSpider().getMain().getMvi().getTotalBikes();
     float stat;
     try {
       stat = ((part / total) * 100);
@@ -94,9 +92,6 @@ public class StatViewController implements Initializable {
       stat = 0;
     }
     return stat;
-*/
-
-   return 0.4f;
   }
 
   public void showMainView(Event event) {
