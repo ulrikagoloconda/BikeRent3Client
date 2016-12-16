@@ -32,7 +32,6 @@ import java.util.ResourceBundle;
 
 import static org.apache.http.HttpHeaders.USER_AGENT;
 
-//import static model.DBUtil.processException;
 
 /**
  * @author Niklas Karlsson
@@ -60,35 +59,12 @@ public class LoginVewController implements Initializable {
         String userName = userNameText.getText();
         String passw = passwordText.getText();
         currentUser = serverCall.login( userName,  passw);
-
+        //TODO else körs aldrig, om man inte lyckats logga in så är currentUser null och det blir ett error
         if(currentUser.getUserID() > 0){ //login = OK!!
             showMainGui();
         }else { // wrong ...
             System.out.println("Fel ...");
            }
-
-
-
-     /*   try {
-            currentUser = dbAccess.logIn(userName, password);
-            if (currentUser.getUserID() > 0) {
-                Sound pling = new Sound();
-                pling.playSoundInThread(Sound.LEAVE_DICE);
-                showMainGui();
-
-            } else {
-                System.out.println("Fel lösenord eller användarnam");
-                ErrorView.showError("Inloggningsfel", "fel vid inloggning", "Kontrollera era uppgifter", 0,new Exception("Wrong user information."));
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Sound pling = new Sound();
-            pling.playMp3SoundInThread(Sound.NO);
-            processException(e);
-           ErrorView.showError("Inloggningsfel", "fel vid inloggning", "Kontrollera era uppgifter", 0,e);
-
-        }*/
   }
     public void showMainGui() {
         if (currentUser == null) {

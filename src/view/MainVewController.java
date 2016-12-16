@@ -44,7 +44,7 @@ public class MainVewController implements Initializable {
     @FXML
     private GridPane gridPane;
     @FXML
-    private ImageView imageView1, imageView2, imageView3;
+    private ImageView mainImage;;
     @FXML
     private Label messageLabel;
     @FXML
@@ -65,6 +65,7 @@ public class MainVewController implements Initializable {
     private Bike selectedBikeSearch;
     private ArrayList<Bike> usersCurrentBikes;
     private ServerCall serverCall;
+
 
 
     private String errorTitle = "Fel i huvudfönster";
@@ -93,6 +94,10 @@ public class MainVewController implements Initializable {
     returnBtn.setVisible(false);
     currentListInView = new ArrayList<>();
     serverCall = new ServerCallImpl();
+        Image image = new Image("img/bike.png");
+        System.out.println(mainImage);
+        mainImage.setImage(image);
+
   }
 
   public void populateUserTextInGUI(BikeUser bikeUser) {
@@ -111,7 +116,6 @@ public class MainVewController implements Initializable {
     mvi = Main.getSpider().getMain().getMvi();
     float total = mvi.getTotalBikes();
     float free = mvi.getAvailableBikes();
-      System.out.println(" i mainVController stat total : " + total + " free " + free);
     System.out.println("free" + " " + free);
     System.out.println("tot: " + total);
     float poc = free / total;
@@ -140,6 +144,10 @@ public class MainVewController implements Initializable {
     Main.getSpider().getMain().showAdeminView();
   }
 
+  //Denna metod används till fem olika syften, och beteendet är något olika beroende på vilken lista av cyklar som ska visas.
+  //Det enum, PopulateType, som skickas som argument är ett sätt att separera de olika användingsområdena.
+  //I och m ed att event är kopplade till de olika användningarna så sätts variabler globalt i klassen, currnetType, currnetListInView, för att
+  //anpassa beteendet när event triggas till aktuell lista och aktuellt syfte
   public boolean populateGridPane(PopulateType type, List<Bike> bikeArray) {
     gridPane.getChildren().clear();
     returnBtn.setVisible(false);
@@ -176,17 +184,11 @@ public class MainVewController implements Initializable {
         values.add(b.getColor());
         values.add(b.getType());
         values.add(b.getBrandName());
-        System.out.println("Varför är detta sant? " + b.isAvailable());
         values.add("" + b.isAvailable());
-        System.out.println(b + " b " + bikeArray.size());
         for (int i = 0; i < 6; i++) {
           if (i == 0) {
             BufferedImage theImage = ImageIO.read(b.getImageStream());
             b.getImageStream().close();
-            /*System.out.println("the image "+theImage);
-            System.out.println(b);
-            System.out.println(b.getImageStream());
-            */
             Image image = SwingFXUtils.toFXImage(theImage, null);
             ImageView iv = new ImageView();
             iv.setFitHeight(65);
@@ -231,6 +233,8 @@ public class MainVewController implements Initializable {
   }
 
 
+  //Denna metod triggas av event då någon klickar, markerar en rad i gridPane. Här används den variabel currentTYpeInView som
+  //sattes när metoden populateGridPane kördes.
   public void onClickActions(Node n) {
     if (currentTypeInView == PopulateType.SEARCH_RESULTS) {
       executeLoanBtn.setVisible(true);

@@ -22,9 +22,6 @@ public interface ServerCall {
     //Metoden uppdaterar en användares användares användaruppgifter, dock inte användar-ID, metoden påverkar inte hanteringen av session
     boolean updateUser(BikeUser oldUser, BikeUser newUser);
 
-    //Metoden sparar error som uppstår i frontend i databasen
-    boolean errorEndpoint(String html,int userID);
-
     //Metoden returnerar alla cyklar som är lediga i databasen
     ArrayList<Bike> getAvailableBikes();
 

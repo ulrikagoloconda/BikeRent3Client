@@ -53,38 +53,13 @@ public class Main extends Application {
 
       @Override
       public void handle(WindowEvent event) {
-        serverCall.closeSession();
+        if(mvi != null) {
+          serverCall.closeSession();
+        }
       }
     });
-        /*user = new BikeUser();
-        String urlString = "http://localhost:8080/text/resources";
-
-
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpPost requsetPost = new HttpPost(urlString);
-        JsonObject jsonObject = new JsonObject();
-
-        jsonObject.addProperty("userName", "Ulrika");
-        jsonObject.addProperty("passw", "Ulrika");
-        String valuePair = jsonObject.toString();
-
-        HttpEntity entity = new StringEntity(valuePair);
-        requsetPost.setEntity(entity);
-        requsetPost.addHeader("User-Agent123", USER_AGENT);
-        HttpResponse response = client.execute(requsetPost);
-        System.out.println("Code " + response.getStatusLine().getStatusCode());
-        //TODO borde kolla att det är status 200, annars händer nåt bäääd
-        String json = EntityUtils.toString(response.getEntity());
-        System.out.println(json);
-        Gson gson = new Gson();
-        mvi = gson.fromJson(json, MainViewInformaiton.class);
-        user = mvi.getCurrentUser();
-        System.out.println("user " + user ); */
   }
-  //TODO ta bort denna metod, en tillfällig lösning för att jobba med mianView
-  public BikeUser tempMetodGetCurrentUser(){
-    return user;
-  }
+
   public MainViewInformaiton getMainVI(){
     return mvi;
   }
@@ -97,7 +72,6 @@ public class Main extends Application {
       primaryStage.setScene(loginScene);
     } catch (Exception e) {
       e.printStackTrace();
-      // AccessErrorLog.insertNewError(0, e.toString());
     }
   }
 
@@ -110,7 +84,6 @@ public class Main extends Application {
         primaryStage.setScene(newUserScene);
       } catch (Exception e) {
         e.printStackTrace();
-        // AccessErrorLog.insertNewError(0, e.toString());
       }
 
     } else {
@@ -127,7 +100,6 @@ public class Main extends Application {
         primaryStage.setScene(mainScene);
       } catch (Exception e) {
         e.printStackTrace();
-        // AccessErrorLog.insertNewError(0, e.toString());
       }
     } else {
       primaryStage.setScene(mainScene);
@@ -143,7 +115,6 @@ public class Main extends Application {
         primaryStage.setScene(changeUserScene);
       } catch (Exception e) {
         e.printStackTrace();
-        // AccessErrorLog.insertNewError(0, e.toString());
 
       }
     } else {
@@ -160,7 +131,6 @@ public class Main extends Application {
         primaryStage.setScene(statViewScean);
       } catch (Exception e) {
         e.printStackTrace();
-        //AccessErrorLog.insertNewError(0, e.toString());
       }
 
     } else {
@@ -178,7 +148,6 @@ public class Main extends Application {
         primaryStage.setScene(deleteBikeScene);
       } catch (Exception e) {
         e.printStackTrace();
-        // AccessErrorLog.insertNewError(0, e.toString());
       }
     } else {
       primaryStage.setScene(deleteBikeScene);
@@ -195,7 +164,6 @@ public class Main extends Application {
         primaryStage.setScene(adminScene);
       } catch (Exception e) {
         e.printStackTrace();
-        //AccessErrorLog.insertNewError(0, e.toString());
       }
     } else {
       primaryStage.setScene(adminScene);

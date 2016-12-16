@@ -2,17 +2,11 @@ package mailing;
 
 import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 /*import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;*/
-import java.io.IOException;
-import java.util.Date;
-import java.util.Properties;
 
 //70 send email: http://www.rgagnon.com/javadetails/java-0083.html
 //http://www.codejava.net/java-ee/javamail/send-e-mail-with-attachment-in-java
