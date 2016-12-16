@@ -190,8 +190,6 @@ public class Main extends Application {
 
   public void setMvi(MainViewInformaiton mvi) {
     this.mvi = mvi;
-    System.out.println("mvi setts");
-
   }
 
   public static void main(String[] args) {

@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import model.MainViewInformaiton;
 
 import java.net.URL;
 import java.util.*;
@@ -143,6 +144,10 @@ public class DeleteBikeViewController implements Initializable {
 
 
     public void showMainView(ActionEvent actionEvent) {
+        MainViewInformaiton mvi = serverCall.fetchUpdatedInfo();
+        Main.getSpider().getMain().getMvi().setTotalBikes(mvi.getTotalBikes());
+        Main.getSpider().getMain().getMvi().setAvailableBikes(mvi.getAvailableBikes());
+        Main.getSpider().getMainView().setStatLabel();
         Main.getSpider().getLoginView().showMainGui();
     }
 }

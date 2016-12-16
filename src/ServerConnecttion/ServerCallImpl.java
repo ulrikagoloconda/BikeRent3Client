@@ -97,8 +97,6 @@ public class ServerCallImpl implements ServerCall {
 
     @Override
     public boolean createNewUser(BikeUser newUser) {
-        //TODO Niklas: path = "..../newUser  (skicka bara en user..)
-
         String urlString = "http://localhost:8080/text/resources/newUser";
 
         HttpClient client = HttpClientBuilder.create().build();
@@ -165,6 +163,7 @@ public class ServerCallImpl implements ServerCall {
             mvi.setOldUser(oldUser);
             mvi.setAlteredUser(alteredUser);
             String json = gson.toJson(mvi);
+            //TODO här behövs det att token och userID sätts i mvi objektet
             HttpEntity entity = new StringEntity(json);
             requsetPost.setEntity(entity);
             HttpResponse response = client.execute(requsetPost);

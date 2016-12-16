@@ -14,6 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
+import model.MainViewInformaiton;
 import org.apache.commons.io.FileUtils;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -57,13 +58,17 @@ public class AddBikeController implements Initializable {
 
   public void addBike(ActionEvent actionEvent) {
     prepairBikeForAdd();
-    serverCall.addBikeToDB(newBike);
+    Bike addedBike = serverCall.addBikeToDB(newBike);
     brandText.setText("");
     modelYearText.setText("");
     colorText.setText("");
     typeText.setText("");
     sizeText.setText("");
-    messageLabel.setText("Cykeln har lagts till");
+    if(addedBike==null) {
+      messageLabel.setText("Något gick fel");
+    }else if (addedBike.getBikeID()>0) {
+      messageLabel.setText("Cykeln har lagts till");
+    }
     urlLabel.setText("");
   }
 
@@ -86,22 +91,14 @@ public class AddBikeController implements Initializable {
   }
 
   public void showMainGui(ActionEvent actionEvent) {
+    MainViewInformaiton mvi = serverCall.fetchUpdatedInfo();
+    Main.getSpider().getMain().getMvi().setTotalBikes(mvi.getTotalBikes());
+    Main.getSpider().getMain().getMvi().setAvailableBikes(mvi.getAvailableBikes());
+    Main.getSpider().getMainView().setStatLabel();
     Main.getSpider().getLoginView().showMainGui();
 
   }
 
-  public void addBikeInQue(ActionEvent actionEvent) throws InterruptedException {
-    prepairBikeForAdd();
-    messageLabel.setText("Cykeln lägs till i kön...");
-    Thread.sleep(500);
-   // BikesFifoQue.enqueue(newBike); //add bike in FIFO
-    urlLabel.setText("");
-    newBike = new Bike();
-    btnQueRunner.setDisable(false);
-
-
-    messageLabel.setText("Önskar du tömma kön, eller lägga till en till?");
-  }
 
   private void prepairBikeForAdd() {
     if (newBike.equals(null)) {
@@ -138,23 +135,5 @@ public class AddBikeController implements Initializable {
         }
       }
     }
-  }
-
-
-  public void addBikeFromQue(ActionEvent actionEvent) throws InterruptedException {
-    /*int counters = 0;
-    while (!BikesFifoQue.isEmty()) {
-      Bike b = BikesFifoQue.dequeue();
-      System.out.println(b.toString());
-      AccessBike.insertNewBike(b);
-      counters++;
-    }
-    messageLabel.setText("Totalt har " + counters + "Cyklar lagts till i kön");
-    Thread.sleep(2000);
-    BikesFifoQue.enqueue(newBike);
-    messageLabel.setText("Önskar lägga till fler?");
-    btnQueRunner.setDisable(true);
-
-*/
   }
 }

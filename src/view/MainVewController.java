@@ -112,7 +112,7 @@ public class MainVewController implements Initializable {
 
   }
 
-  private void setStatLabel() {
+  public void setStatLabel() {
     mvi = Main.getSpider().getMain().getMvi();
     float total = mvi.getTotalBikes();
     float free = mvi.getAvailableBikes();
