@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 /**
  * Created by Goloconda on 2016-11-29.
  */
+/*
    public class Deserializer<T> implements JsonDeserializer<T> {
     @Override
     public T deserialize(JsonElement je, Type type, JsonDeserializationContext jdc)
@@ -19,4 +20,4 @@ import java.lang.reflect.Type;
         return new Gson().fromJson(content, type);
 
     }
-}
+}*/

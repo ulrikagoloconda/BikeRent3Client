@@ -30,13 +30,11 @@ import static org.apache.http.HttpHeaders.USER_AGENT;
  * Created by Goloconda on 2016-12-01.
  */
 public class ServerCallImpl implements ServerCall {
-    //private String URL_STRING = "http://localhost:8080/text/resources";
     @Override
     public BikeUser login(String userName, String passw) {
         //start: "try login"
         BikeUser user = new BikeUser();
         String urlString = "http://localhost:8080/text/resources";
-        System.out.println(urlString + " url i login ");
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost requsetPost = new HttpPost(urlString);
         JsonObject jsonObject = new JsonObject();
@@ -76,7 +74,6 @@ public class ServerCallImpl implements ServerCall {
             //TODO hej Niklas! Här skulle jag vilja ha ett utskrivet stacktrace, det är lättare att söka fel i tycker jag
             System.out.println("Fel på path eller server..");
             ErrorView.showError("Inloggningsfel-serverCall", "fel vid inloggning", "Fail", 0, new Exception("httpResponseCode" + httpResponseCode + errorText));
-            closeSession();
             Main.getSpider().getMain().showLoginView();
 
         } else {
@@ -92,7 +89,6 @@ public class ServerCallImpl implements ServerCall {
             } else { // wrong password
                 System.out.println("Fel lösenord eller användarnam");
                 ErrorView.showError("Inloggningsfel", "fel vid inloggning", "Kontrollera era uppgifter", 0, new Exception(httpResponseCode + "Wrong user information." + errorText));
-                closeSession();
                 Main.getSpider().getMain().showLoginView();
             }
         }
@@ -101,8 +97,6 @@ public class ServerCallImpl implements ServerCall {
 
     @Override
     public boolean createNewUser(BikeUser newUser) {
-        //TODO Niklas: path = "..../newUser  (skicka bara en user..)
-
         String urlString = "http://localhost:8080/text/resources/newUser";
 
         HttpClient client = HttpClientBuilder.create().build();
@@ -156,8 +150,8 @@ public class ServerCallImpl implements ServerCall {
 
     @Override
     public boolean updateUser(BikeUser oldUser, BikeUser alteredUser) {
-        //TODO Niklas: path = "..../alterUser (finns i mainV.info..)
         Gson gson = new Gson();
+        boolean isReturnOK = false;
         String url = "http://localhost:8080/text/resources/alterUser";
         try {
             HttpClient client = HttpClientBuilder.create().build();
@@ -169,25 +163,30 @@ public class ServerCallImpl implements ServerCall {
             mvi.setOldUser(oldUser);
             mvi.setAlteredUser(alteredUser);
             String json = gson.toJson(mvi);
+            //TODO här behövs det att token och userID sätts i mvi objektet
             HttpEntity entity = new StringEntity(json);
             requsetPost.setEntity(entity);
             HttpResponse response = client.execute(requsetPost);
             System.out.println("Code " + response.getStatusLine().getStatusCode());
-            String returnedJson = EntityUtils.toString(response.getEntity());
-            System.out.println(returnedJson);
-            Gson gson1 = new Gson();
-            boolean isReturnOK = gson1.fromJson(returnedJson, boolean.class);
-            return isReturnOK;
+            String code = response.getStatusLine().getStatusCode() + "";
+            if (response.getStatusLine().getStatusCode() == 200) {
+                String returnedJson = EntityUtils.toString(response.getEntity());
+                System.out.println(returnedJson);
+                Gson gson1 = new Gson();
+                isReturnOK = gson1.fromJson(returnedJson, boolean.class);
+                return isReturnOK;
+            } else {
+                ResponceCodeCecker.checkCode(code);
+                closeSession();
+                Main.getSpider().getMain().showLoginView();
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
+            closeSession();
+            Main.getSpider().getMain().showLoginView();
         }
-    }
-
-    @Override
-    public boolean errorEndpoint(String html, int userID) {
-        //TODO AGILT..
-        return false;
+        return isReturnOK;
     }
 
     @Override
@@ -209,24 +208,28 @@ public class ServerCallImpl implements ServerCall {
             requsetPost.setEntity(entity);
             HttpResponse response = client.execute(requsetPost);
             System.out.println("Code " + response.getStatusLine().getStatusCode());
+            String code = response.getStatusLine().getStatusCode() + "";
             if (response.getStatusLine().getStatusCode() == 200) {
                 String json = EntityUtils.toString(response.getEntity());
-                System.out.println(json);
                 bikes = gson.fromJson(json, Bikes.class);
-                System.out.println("json " + bikes.getBikes() + " " + json);
                 return bikes.getBikes();
             } else {
+                ResponceCodeCecker.checkCode(code);
+                closeSession();
                 Main.getSpider().getMain().showLoginView();
             }
         } catch (Exception e) {
             e.printStackTrace();
+            ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
+            closeSession();
+            Main.getSpider().getMain().showLoginView();
         }
         return new ArrayList<>();
     }
 
     @Override
     public Map<String, Integer> getBikesFromSearch(String searchString) {
-        Map<String, Integer> returnMap = new HashMap<>();
+        Map<String, Integer> returnMap = null;
         Gson gson = new Gson();
         String url = "http://localhost:8080/text/resources/search";
         try {
@@ -246,20 +249,31 @@ public class ServerCallImpl implements ServerCall {
             requsetPost.setEntity(entity);
             HttpResponse response = client.execute(requsetPost);
             System.out.println("Code " + response.getStatusLine().getStatusCode());
-            String returnedJson = EntityUtils.toString(response.getEntity());
-            Gson gson1 = new Gson();
-            Bikes bikes = gson1.fromJson(returnedJson, Bikes.class);
-            returnMap = bikes.getSearchResults();
-            return returnMap;
+            String code = response.getStatusLine().getStatusCode() + "";
+            if (response.getStatusLine().getStatusCode() == 200) {
+                String returnedJson = EntityUtils.toString(response.getEntity());
+                Gson gson1 = new Gson();
+                Bikes bikes = gson1.fromJson(returnedJson, Bikes.class);
+                returnMap = bikes.getSearchResults();
+                return returnMap;
+            } else {
+                ResponceCodeCecker.checkCode(code);
+                closeSession();
+                Main.getSpider().getMain().showLoginView();
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
+            closeSession();
+            Main.getSpider().getMain().showLoginView();
         }
+        return returnMap;
     }
 
     @Override
     public Bike addBikeToDB(Bike newBike) {
         String urlString = "http://localhost:8080/text/resources/newBike";
+        Bike returnedBike = null;
         try {
             Gson gson = new Gson();
             HttpClient client = HttpClientBuilder.create().build();
@@ -278,23 +292,30 @@ public class ServerCallImpl implements ServerCall {
             requsetPost.setEntity(entity);
             HttpResponse response = client.execute(requsetPost);
             System.out.println("Code " + response.getStatusLine().getStatusCode());
+            String code = response.getStatusLine().getStatusCode() + "";
             if (response.getStatusLine().getStatusCode() == 200) {
                 String returnedJson = EntityUtils.toString(response.getEntity());
                 Gson gson1 = new Gson();
-                Bike returnedBike = gson1.fromJson(returnedJson, Bike.class);
+                returnedBike = gson1.fromJson(returnedJson, Bike.class);
                 return returnedBike;
             } else {
-                return null;
+                ResponceCodeCecker.checkCode(code);
+                closeSession();
+                Main.getSpider().getMain().showLoginView();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
+            closeSession();
+            Main.getSpider().getMain().showLoginView();
         }
+        return returnedBike;
     }
 
     @Override
     public String removeBikeFromDB(int bikeID) {
         String urlString = "http://localhost:8080/text/resources/removeBike";
+        String mess = "Något har gått fel";
         try {
             HttpClient client = HttpClientBuilder.create().build();
             String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
@@ -305,22 +326,29 @@ public class ServerCallImpl implements ServerCall {
             requsetGet.addHeader("remove_bike", USER_AGENT);
             HttpResponse response = client.execute(requsetGet);
             System.out.println("Code " + response.getStatusLine().getStatusCode());
+            String code = response.getStatusLine().getStatusCode() + "";
             if (response.getStatusLine().getStatusCode() == 200) {
-                String mess = EntityUtils.toString(response.getEntity());
+                mess = EntityUtils.toString(response.getEntity());
                 return mess;
             } else {
-                return "Något har gått fel";
+                ResponceCodeCecker.checkCode(code);
+                closeSession();
+                Main.getSpider().getMain().showLoginView();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return "Något har gått fel";
+            ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
+            closeSession();
+            Main.getSpider().getMain().showLoginView();
         }
+        return mess;
     }
 
     @Override
     public Bike executeBikeLoan(int bikeID) {
         String url = "http://localhost:8080/text/resources/executeRental";
         Gson gson = new Gson();
+        Bike bike = null;
         try {
             HttpClient client = HttpClientBuilder.create().build();
             HttpPost requsetPost = new HttpPost(url);
@@ -338,20 +366,29 @@ public class ServerCallImpl implements ServerCall {
             requsetPost.setEntity(entity);
             HttpResponse response = client.execute(requsetPost);
             System.out.println("Code " + response.getStatusLine().getStatusCode());
-            String returnedJson = EntityUtils.toString(response.getEntity());
-            System.out.println(returnedJson);
-            Gson gson1 = new Gson();
-            Bike bike = gson1.fromJson(returnedJson, Bike.class);
-            return bike;
+            String code = response.getStatusLine().getStatusCode() + "";
+            if (response.getStatusLine().getStatusCode() == 200) {
+                String returnedJson = EntityUtils.toString(response.getEntity());
+                System.out.println(returnedJson);
+                Gson gson1 = new Gson();
+                bike = gson1.fromJson(returnedJson, Bike.class);
+                return bike;
+            } else {
+                ResponceCodeCecker.checkCode(code);
+                closeSession();
+                Main.getSpider().getMain().showLoginView();
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
+            closeSession();
+            Main.getSpider().getMain().showLoginView();
         }
+        return bike;
     }
 
     @Override
     public boolean returnBike(int userID, int bikeID) {
-        //TODO Niklas: path = "..../ReturnLoanBike (skickas som en bikeId eller vad metoden kräver!! :-) ..)
         Gson gson = new Gson();
         Bikes bikes = null;
         String url = "http://localhost:8080/text/resources/returnBike";
@@ -389,8 +426,6 @@ public class ServerCallImpl implements ServerCall {
             Main.getSpider().getMain().showLoginView();
             return false;
         }
-
-
         return isReturnOkID;
     }
 
@@ -398,6 +433,7 @@ public class ServerCallImpl implements ServerCall {
     public Bike getSingleBike(int bikeID) {
         Gson gson = new Gson();
         String url = "http://localhost:8080/text/resources/getBike";
+        Bike bike = null;
         try {
             HttpClient client = HttpClientBuilder.create().build();
             HttpPost requsetPost = new HttpPost(url);
@@ -415,15 +451,26 @@ public class ServerCallImpl implements ServerCall {
             requsetPost.setEntity(entity);
             HttpResponse response = client.execute(requsetPost);
             System.out.println("Code " + response.getStatusLine().getStatusCode());
-            String returnedJson = EntityUtils.toString(response.getEntity());
-            System.out.println(returnedJson);
-            Gson gson1 = new Gson();
-            Bike bike = gson1.fromJson(returnedJson, Bike.class);
-            return bike;
+            String code = response.getStatusLine().getStatusCode() + "";
+            if (response.getStatusLine().getStatusCode() == 200) {
+                String returnedJson = EntityUtils.toString(response.getEntity());
+                System.out.println(returnedJson);
+                Gson gson1 = new Gson();
+                bike = gson1.fromJson(returnedJson, Bike.class);
+                return bike;
+            } else {
+                ResponceCodeCecker.checkCode(code);
+                closeSession();
+                Main.getSpider().getMain().showLoginView();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
+            closeSession();
+            Main.getSpider().getMain().showLoginView();
         }
+        return bike;
     }
 
     @Override
@@ -445,13 +492,29 @@ public class ServerCallImpl implements ServerCall {
                 requsetPost.setEntity(entity);
                 HttpResponse response = client.execute(requsetPost);
                 System.out.println("Code " + response.getStatusLine().getStatusCode());
-                String json = EntityUtils.toString(response.getEntity());
-                System.out.println(json);
-                BikeUser user = gson.fromJson(json, BikeUser.class);
-                Main.getSpider().getMain().getMainVI().getCurrentUser().setSessionToken(user.getSessionToken());
+                String code = response.getStatusLine().getStatusCode() + "";
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    String json = EntityUtils.toString(response.getEntity());
+                    System.out.println(json);
+                    BikeUser user = gson.fromJson(json, BikeUser.class);
+                    Main.getSpider().getMain().getMainVI().getCurrentUser().setSessionToken(user.getSessionToken());
+                } else if (code.charAt(0) == '5') {
+                    ErrorView.showError("Serverfel", "Fel hos servern", "Din session kan tyfärr inte avslutas", 0, new Exception(code + "Din session kan tyvärr inte avslutas på detta sätt." +
+                            "Den kommer att automatiskt avslutas inom 24 timmar om du inte under samma tid loggar in på nytt" + ""));
+                    Main.getSpider().getMain().getMainVI().getCurrentUser().setSessionToken("-1");
+                    Main.getSpider().getMain().showLoginView();
+                } else if (code.charAt(0) == '4') {
+                    ErrorView.showError("Klientens kontakt med servern felar", "Ingen endpoint funnen", "Försök igen senare", 0, new Exception(code + "Din session kan tyvärr inte avslutas på detta sätt." +
+                            "Den kommer att automatiskt avslutas inom 24 timmar om du inte under samma tid loggar in på nytt" + ""));
+                    Main.getSpider().getMain().getMainVI().getCurrentUser().setSessionToken("-1");
+                    Main.getSpider().getMain().showLoginView();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
+            ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
+            Main.getSpider().getMain().getMainVI().getCurrentUser().setSessionToken("-1");
+            Main.getSpider().getMain().showLoginView();
         }
     }
 
@@ -482,16 +545,10 @@ public class ServerCallImpl implements ServerCall {
                 Gson gson1 = new Gson();
                 bikes = gson1.fromJson(returnedJson, Bikes.class);
                 return bikes.getBikes();
-            } else if (code.charAt(0) == '5') {
-                ErrorView.showError("Serverfel", "Fel hos servern ", "Försök igen senare", 0, new Exception(code + "Fel hos server." + ""));
-                closeSession();
-                Main.getSpider().getMain().showLoginView();
-            } else if (code.charAt(0) == '4') {
-                ErrorView.showError("Klientens kontakt med servern felar", "Ingen endpoint funnen ", "Försök igen senare", 0, new Exception(code + "Ingen endpoint funnen" + ""));
-                closeSession();
-                Main.getSpider().getMain().showLoginView();
             } else {
-                return null;
+                ResponceCodeCecker.checkCode(code);
+                closeSession();
+                Main.getSpider().getMain().showLoginView();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -536,7 +593,6 @@ public class ServerCallImpl implements ServerCall {
                 Main.getSpider().getMain().getMvi().getCurrentUser().setTotalBikeLoans(usersTotalLoan);
                 Main.getSpider().getMain().getMvi().setTotalBikes(total);
                 Main.getSpider().getMain().getMvi().setAvailableBikes(available);
-
 
             } else {
                 ResponceCodeCecker.checkCode(code);

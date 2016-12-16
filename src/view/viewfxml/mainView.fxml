@@ -64,11 +64,7 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <ImageView fitHeight="92.0" fitWidth="146.0" layoutX="358.0" layoutY="59.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="118.82008361816406">
-               <image>
-                  <Image url="@../../../img/bike.png" />
-               </image>
-            </ImageView>
+            <ImageView fx:id="mainImage" fitHeight="108.0" fitWidth="160.0" layoutX="382.0" layoutY="56.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="58.0" />
             <Label layoutX="406.0" layoutY="182.0" text="Vill du se lite statistik? ">
                <font>
                   <Font size="16.0" />

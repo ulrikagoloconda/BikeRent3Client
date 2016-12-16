@@ -23,6 +23,7 @@ public class BikeUser {
     private ArrayList<Integer> totalBikeLoans;
 
     public BikeUser() {
+        this.sessionToken= "-1";
     }
 
     public BikeUser(String userName, String fName, String lName, int memberLevel, String email, int phone, LocalDate memberSince) {
@@ -33,6 +34,7 @@ public class BikeUser {
         this.email = email;
         this.phone = phone;
         this.memberSince = memberSince;
+        this.sessionToken= "-1";
     }
     public BikeUser(String fName, String lName, int in_memberlevel, String email, int phone, String userName, String password){
     this.fName = fName;
@@ -42,6 +44,7 @@ public class BikeUser {
     this.phone = phone;
     this.userName = userName;
     this.passw = password;
+        this.sessionToken= "-1";
   }
 
     public int getUserID() {
