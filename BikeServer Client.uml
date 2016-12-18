@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>model.Bike</OriginalElement>
+  <nodes>
+    <node x="3529.0090667068525" y="1026.0">view.AdminViewController</node>
+    <node x="2835.0" y="4434.0">view.ErrorView</node>
+    <node x="4468.5090667068525" y="0.0">Interfaces.DBAccess</node>
+    <node x="2235.9912095639957" y="2862.0">view.MainVewController</node>
+    <node x="2406.0" y="4434.0">Interfaces.DeleteUser</node>
+    <node x="2725.5528750433814" y="0.0">model.Bike</node>
+    <node x="1957.0" y="4434.0">Interfaces.InsertNewUser</node>
+    <node x="2102.0763078342197" y="2208.5">view.ChangeUserController1</node>
+    <node x="3457.5090667068525" y="3313.5">view.StatViewController</node>
+    <node x="701.875" y="2197.0">view.NewUserVewController</node>
+    <node x="480.0" y="4434.0">Model.AccessBike</node>
+    <node x="3110.8035714285716" y="1557.0">java.lang.Enum</node>
+    <node x="0.0" y="4434.0">Model.AccessUser</node>
+    <node x="1298.0" y="4434.0">Model.AccessRentbridge</node>
+    <node x="340.875" y="2296.0">view.LoginVewController</node>
+    <node x="1997.45061144903" y="1136.0">model.MainViewInformaiton</node>
+    <node x="3227.0" y="4434.0">ServerConnecttion.ResponceCodeCecker</node>
+    <node x="0.0" y="3170.5">view.AddBikeController</node>
+    <node x="3917.5090667068525" y="509.0">view.DeleteBikeViewController</node>
+    <node x="882.0" y="4536.0">model.Deserializer</node>
+    <node x="999.625" y="1114.0">ServerConnecttion.ServerCall</node>
+    <node x="3203.8035714285716" y="2341.0">model.PopulateType</node>
+    <node x="3194.3035714285716" y="1246.5">java.io.Serializable</node>
+    <node x="1772.45061144903" y="1579.5">ServerConnecttion.ServerCallImpl</node>
+    <node x="118.28501790052451" y="674.0">model.Bikes</node>
+    <node x="4541.0090667068525" y="587.0">REST.RestRoot</node>
+    <node x="1486.5048792627915" y="4116.0">view.SpiderView</node>
+    <node x="882.0" y="4434.0">com.google.gson.JsonDeserializer</node>
+    <node x="3306.3035714285716" y="1235.5">java.lang.Comparable</node>
+    <node x="1225.875" y="2010.0">view.Main</node>
+    <node x="1654.0" y="4434.0">Model.AccessErrorLog</node>
+    <node x="1540.0350179005245" y="542.0">model.BikeUser</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="view.AddBikeController" target="model.Bike">
+      <point x="-70.5" y="-268.5" />
+      <point x="211.5" y="2842.0" />
+      <point x="272.7850179005245" y="2842.0" />
+      <point x="272.7850179005245" y="479.0" />
+      <point x="2861.108430598937" y="479.0" />
+      <point x="-108.44444444444434" y="214.5" />
+    </edge>
+    <edge source="view.SpiderView" target="view.MainVewController">
+      <point x="58.90909090909099" y="-136.5" />
+      <point x="1707.4139701718825" y="4066.0" />
+      <point x="2832.4912095639957" y="4066.0" />
+      <point x="0.0" y="577.0" />
+    </edge>
+    <edge source="model.PopulateType" target="java.lang.Enum">
+      <point x="0.0" y="-70.0" />
+      <point x="0.0" y="181.5" />
+    </edge>
+    <edge source="view.ChangeUserController1" target="ServerConnecttion.ServerCallImpl">
+      <point x="-60.5" y="-202.5" />
+      <point x="2283.5763078342197" y="1970.0" />
+      <point x="2139.2363257347442" y="1970.0" />
+      <point x="169.28571428571422" y="159.0" />
+    </edge>
+    <edge source="model.BikeUser" target="model.Bike">
+      <point x="0.0" y="-180.5" />
+      <point x="1735.5350179005245" y="489.0" />
+      <point x="2915.330652821159" y="489.0" />
+      <point x="-54.22222222222217" y="214.5" />
+    </edge>
+    <edge source="view.SpiderView" target="view.LoginVewController">
+      <point x="-117.81818181818198" y="-136.5" />
+      <point x="1530.6866974446095" y="4086.0" />
+      <point x="596.625" y="4086.0" />
+      <point x="85.25" y="115.0" />
+    </edge>
+    <edge source="view.MainVewController" target="model.Bike">
+      <point x="340.8571428571429" y="-577.0" />
+      <point x="3173.3483524211383" y="2842.0" />
+      <point x="3100.3035714285716" y="2842.0" />
+      <point x="3100.3035714285716" y="479.0" />
+      <point x="3023.7750972656036" y="479.0" />
+      <point x="54.22222222222217" y="214.5" />
+    </edge>
+    <edge source="view.AdminViewController" target="model.Bike">
+      <point x="126.0" y="-235.5" />
+      <point x="3907.0090667068525" y="469.0" />
+      <point x="3077.9973194878257" y="469.0" />
+      <point x="108.44444444444423" y="214.5" />
+    </edge>
+    <edge source="view.Main" target="view.SpiderView">
+      <point x="0.0" y="401.0" />
+      <point x="1639.875" y="2842.0" />
+      <point x="1666.2054952782812" y="2842.0" />
+      <point x="1666.2054952782812" y="4036.0" />
+      <point x="1619.050333808246" y="4036.0" />
+      <point x="-29.454545454545496" y="-136.5" />
+    </edge>
+    <edge source="view.SpiderView" target="view.Main">
+      <point x="-58.90909090909099" y="-136.5" />
+      <point x="1589.5957883537005" y="4066.0" />
+      <point x="1496.375" y="4066.0" />
+      <point x="1496.375" y="2842.0" />
+      <point x="1363.875" y="2842.0" />
+      <point x="-276.0" y="401.0" />
+    </edge>
+    <edge source="view.MainVewController" target="model.MainViewInformaiton">
+      <point x="-170.42857142857144" y="-577.0" />
+      <point x="2662.062638135424" y="2842.0" />
+      <point x="2820.32561144903" y="2842.0" />
+      <point x="2820.32561144903" y="1517.0" />
+      <point x="2298.2839447823635" y="1517.0" />
+      <point x="120.33333333333326" y="125.5" />
+    </edge>
+    <edge source="view.LoginVewController" target="ServerConnecttion.ServerCallImpl">
+      <point x="127.875" y="-115.0" />
+      <point x="639.25" y="1950.0" />
+      <point x="1800.6648971633158" y="1950.0" />
+      <point x="-169.28571428571422" y="159.0" />
+    </edge>
+    <edge source="view.SpiderView" target="view.NewUserVewController">
+      <point x="-88.36363636363649" y="-136.5" />
+      <point x="1560.141242899155" y="4076.0" />
+      <point x="953.875" y="4076.0" />
+      <point x="0.0" y="214.0" />
+    </edge>
+    <edge source="java.lang.Enum" target="java.io.Serializable">
+      <point x="-99.75" y="-181.5" />
+      <point x="3210.5535714285716" y="1537.0" />
+      <point x="3240.3035714285716" y="1537.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="view.SpiderView" target="view.AdminViewController">
+      <point x="117.81818181818198" y="-136.5" />
+      <point x="1766.3230610809735" y="4086.0" />
+      <point x="3781.0090667068525" y="4086.0" />
+      <point x="0.0" y="235.5" />
+    </edge>
+    <edge source="view.LoginVewController" target="ServerConnecttion.ServerCall">
+      <point x="42.625" y="-115.0" />
+      <point x="554.0" y="1990.0" />
+      <point x="516.875" y="1990.0" />
+      <point x="516.875" y="1537.0" />
+      <point x="1052.875" y="1537.0" />
+      <point x="-159.75" y="147.5" />
+    </edge>
+    <edge source="model.Bikes" target="model.Bike">
+      <point x="0.0" y="-48.5" />
+      <point x="184.7850179005245" y="459.0" />
+      <point x="2752.6639861544927" y="459.0" />
+      <point x="-216.8888888888887" y="214.5" />
+    </edge>
+    <edge source="view.SpiderView" target="view.DeleteBikeViewController">
+      <point x="147.27272727272702" y="-136.5" />
+      <point x="1795.7776065355185" y="4096.0" />
+      <point x="4170.5090667068525" y="4096.0" />
+      <point x="0.0" y="213.5" />
+    </edge>
+    <edge source="view.AddBikeController" target="view.LoginVewController">
+      <point x="211.5" y="-268.5" />
+      <point x="493.5" y="2842.0" />
+      <point x="426.125" y="2842.0" />
+      <point x="-85.25" y="115.0" />
+    </edge>
+    <edge source="REST.RestRoot" target="Interfaces.DBAccess">
+      <point x="0.0" y="-159.0" />
+      <point x="0.0" y="268.5" />
+    </edge>
+    <edge source="view.AdminViewController" target="model.BikeUser">
+      <point x="-126.0" y="-235.5" />
+      <point x="3655.0090667068525" y="956.0" />
+      <point x="1914.743351233858" y="956.0" />
+      <point x="179.20833333333348" y="180.5" />
+    </edge>
+    <edge source="view.MainVewController" target="model.BikeUser">
+      <point x="0.0" y="-577.0" />
+      <point x="2832.4912095639957" y="2842.0" />
+      <point x="2951.0763078342197" y="2842.0" />
+      <point x="2951.0763078342197" y="966.0" />
+      <point x="1882.1600179005245" y="966.0" />
+      <point x="146.625" y="180.5" />
+    </edge>
+    <edge source="view.MainVewController" target="model.PopulateType">
+      <point x="511.2857142857142" y="-577.0" />
+      <point x="3343.7769238497094" y="2842.0" />
+      <point x="3310.3035714285716" y="2842.0" />
+      <point x="0.0" y="70.0" />
+    </edge>
+    <edge source="view.Main" target="ServerConnecttion.ServerCall">
+      <point x="-310.5" y="-401.0" />
+      <point x="1329.375" y="1940.0" />
+      <point x="1159.375" y="1940.0" />
+      <point x="-53.25" y="147.5" />
+    </edge>
+    <edge source="view.NewUserVewController" target="ServerConnecttion.ServerCallImpl">
+      <point x="189.0" y="-214.0" />
+      <point x="1142.875" y="1970.0" />
+      <point x="1913.5220400204585" y="1970.0" />
+      <point x="-56.42857142857156" y="159.0" />
+    </edge>
+    <edge source="ServerConnecttion.ServerCallImpl" target="ServerConnecttion.ServerCall">
+      <point x="-131.66666666666652" y="-159.0" />
+      <point x="1838.2839447823635" y="1537.0" />
+      <point x="1265.875" y="1537.0" />
+      <point x="53.25" y="147.5" />
+    </edge>
+    <edge source="ServerConnecttion.ServerCallImpl" target="model.MainViewInformaiton">
+      <point x="131.66666666666652" y="-159.0" />
+      <point x="2101.6172781156965" y="1537.0" />
+      <point x="2057.6172781156965" y="1537.0" />
+      <point x="-120.33333333333337" y="125.5" />
+    </edge>
+    <edge source="view.Main" target="model.MainViewInformaiton">
+      <point x="310.5" y="-401.0" />
+      <point x="1950.375" y="1990.0" />
+      <point x="2177.95061144903" y="1990.0" />
+      <point x="0.0" y="125.5" />
+    </edge>
+    <edge source="view.MainVewController" target="ServerConnecttion.ServerCallImpl">
+      <point x="-511.2857142857142" y="-577.0" />
+      <point x="2321.205495278281" y="2832.0" />
+      <point x="2064.375" y="2832.0" />
+      <point x="2064.375" y="1980.0" />
+      <point x="2026.3791828776016" y="1980.0" />
+      <point x="56.42857142857156" y="159.0" />
+    </edge>
+    <edge source="ServerConnecttion.ServerCallImpl" target="model.BikeUser">
+      <point x="0.0" y="-159.0" />
+      <point x="1969.95061144903" y="1006.0" />
+      <point x="1751.826684567191" y="1006.0" />
+      <point x="16.291666666666742" y="180.5" />
+    </edge>
+    <edge source="java.lang.Enum" target="java.lang.Comparable">
+      <point x="99.75" y="-181.5" />
+      <point x="3410.0535714285716" y="1537.0" />
+      <point x="3380.3035714285716" y="1537.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="view.NewUserVewController" target="model.BikeUser">
+      <point x="-189.0" y="-214.0" />
+      <point x="764.875" y="1940.0" />
+      <point x="773.7054952782812" y="1940.0" />
+      <point x="773.7054952782812" y="986.0" />
+      <point x="1654.076684567191" y="986.0" />
+      <point x="-81.45833333333326" y="180.5" />
+    </edge>
+    <edge source="view.MainVewController" target="ServerConnecttion.ServerCall">
+      <point x="-340.8571428571429" y="-577.0" />
+      <point x="2491.6340667068525" y="2832.0" />
+      <point x="2809.32561144903" y="2832.0" />
+      <point x="2809.32561144903" y="1527.0" />
+      <point x="1372.375" y="1527.0" />
+      <point x="159.75" y="147.5" />
+    </edge>
+    <edge source="view.AddBikeController" target="model.BikeUser">
+      <point x="70.5" y="-268.5" />
+      <point x="352.5" y="2842.0" />
+      <point x="283.7850179005245" y="2842.0" />
+      <point x="283.7850179005245" y="956.0" />
+      <point x="1556.326684567191" y="956.0" />
+      <point x="-179.20833333333326" y="180.5" />
+    </edge>
+    <edge source="view.Main" target="model.BikeUser">
+      <point x="-103.5" y="-401.0" />
+      <point x="1535.375" y="1006.0" />
+      <point x="1719.243351233858" y="1006.0" />
+      <point x="-16.291666666666515" y="180.5" />
+    </edge>
+    <edge source="view.SpiderView" target="view.StatViewController">
+      <point x="88.36363636363649" y="-136.5" />
+      <point x="1736.868515626428" y="4076.0" />
+      <point x="3614.0090667068525" y="4076.0" />
+      <point x="0.0" y="125.5" />
+    </edge>
+    <edge source="model.MainViewInformaiton" target="model.BikeUser">
+      <point x="0.0" y="-125.5" />
+      <point x="2177.95061144903" y="996.0" />
+      <point x="1784.4100179005245" y="996.0" />
+      <point x="48.875" y="180.5" />
+    </edge>
+    <edge source="view.DeleteBikeViewController" target="model.Bike">
+      <point x="126.5" y="-213.5" />
+      <point x="4297.0090667068525" y="449.0" />
+      <point x="3186.4417639322705" y="449.0" />
+      <point x="216.88888888888914" y="214.5" />
+    </edge>
+    <edge source="view.LoginVewController" target="model.BikeUser">
+      <point x="-42.625" y="-115.0" />
+      <point x="468.75" y="1990.0" />
+      <point x="505.875" y="1990.0" />
+      <point x="505.875" y="976.0" />
+      <point x="1621.4933512338575" y="976.0" />
+      <point x="-114.04166666666674" y="180.5" />
+    </edge>
+    <edge source="view.SpiderView" target="view.AddBikeController">
+      <point x="-147.27272727272702" y="-136.5" />
+      <point x="1501.2321519900645" y="4096.0" />
+      <point x="282.0" y="4096.0" />
+      <point x="0.0" y="268.5" />
+    </edge>
+    <edge source="model.Deserializer" target="com.google.gson.JsonDeserializer">
+      <point x="0.0" y="-26.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="view.ChangeUserController1" target="model.BikeUser">
+      <point x="181.5" y="-202.5" />
+      <point x="2525.5763078342197" y="1990.0" />
+      <point x="2568.245116170749" y="1990.0" />
+      <point x="2568.245116170749" y="976.0" />
+      <point x="1849.576684567191" y="976.0" />
+      <point x="114.04166666666674" y="180.5" />
+    </edge>
+    <edge source="view.SpiderView" target="view.ChangeUserController1">
+      <point x="29.454545454545496" y="-136.5" />
+      <point x="1677.959424717337" y="4056.0" />
+      <point x="2225.4912095639957" y="4056.0" />
+      <point x="2225.4912095639957" y="2842.0" />
+      <point x="2344.0763078342197" y="2842.0" />
+      <point x="0.0" y="202.5" />
+    </edge>
+    <edge source="view.Main" target="ServerConnecttion.ServerCallImpl">
+      <point x="103.5" y="-401.0" />
+      <point x="1743.375" y="1980.0" />
+      <point x="1969.95061144903" y="1980.0" />
+      <point x="0.0" y="159.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.20186203977994074" x="2543.0" y="2353.0" />
+  <SelectedNodes>
+    <node>view.AddBikeController</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Methods</Category>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
