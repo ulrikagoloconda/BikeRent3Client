@@ -53,7 +53,6 @@ public class ServerCallImpl implements ServerCall {
             HttpResponse response = client.execute(requsetPost);
             httpResponseCode = response.getStatusLine().getStatusCode();
             System.out.println("Code " + httpResponseCode);
-            //TODO borde kolla att det är status 200, annars händer nåt bäääd
             json = EntityUtils.toString(response.getEntity());
             System.out.println(json);
         } catch (UnsupportedEncodingException e) {
@@ -70,20 +69,23 @@ public class ServerCallImpl implements ServerCall {
             httpResponseCode = 3;
         }
         if (httpResponseCode != 200) { //error in request or connection
-            //TODO hej Niklas! Här skulle jag vilja ha ett utskrivet stacktrace, det är lättare att söka fel i tycker jag
             System.out.println("Fel på path eller server..");
+            System.out.println(errorText);
             ErrorView.showError("Inloggningsfel-serverCall", "fel vid inloggning", "Fail", 0, new Exception("httpResponseCode" + httpResponseCode + errorText));
             Main.getSpider().getMain().showLoginView();
 
         } else {
             Gson gson = new Gson();
             MainViewInformaiton mvi = gson.fromJson(json, MainViewInformaiton.class);
-            System.out.println("totalloanslient mm:" + mvi.getCurrentUser().getCurrentBikeLoans() + " & " + mvi.getCurrentUser().getTotalBikeLoans());
+            System.out.println("totalloanslient mm:" + mvi.getCurrentUser().getCurrentBikeLoans() + " & " + mvi.getCurrentUser().getTotalBikeLoans() + " phone : " + mvi.getCurrentUser().getPhone() );
 
             if (mvi.getCurrentUser().getUserID() > 0) { //login = OK!!
                 user = mvi.getCurrentUser();
                 System.out.println("user " + user);
                 Main.getSpider().getMain().setMvi(mvi);
+                //TODO kolla detta
+             //  Main.getSpider().getMainView().populateUserTextInGUI(mvi.getCurrentUser());
+
                 return user;
             } else { // wrong password
                 System.out.println("Fel lösenord eller användarnam");
@@ -132,7 +134,7 @@ public class ServerCallImpl implements ServerCall {
             httpResponseCode = 3;
         }
         if (httpResponseCode != 200) { //error in request or connection
-            System.out.println("Fel på path eller server..");
+            System.out.println("Fel på path eller server.." + errorText);
             ErrorView.showError("addUser-serverCall", "fel vid addUser", "Fail", 0, new Exception("httpResponseCode" + httpResponseCode + errorText));
         } else {
             gson = new Gson();
@@ -152,41 +154,47 @@ public class ServerCallImpl implements ServerCall {
         Gson gson = new Gson();
         boolean isReturnOK = false;
         String url = "http://localhost:8080/text/resources/alterUser";
-        try {
-            HttpClient client = HttpClientBuilder.create().build();
-            HttpPost requsetPost = new HttpPost(url);
-            requsetPost.addHeader("User-Agent123", USER_AGENT);
-            String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
-            int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
-            MainViewInformaiton mvi = new MainViewInformaiton();
-            mvi.setOldUser(oldUser);
-            mvi.setAlteredUser(alteredUser);
-            String json = gson.toJson(mvi);
-            //TODO här behövs det att token och userID sätts i mvi objektet
-            HttpEntity entity = new StringEntity(json);
-            requsetPost.setEntity(entity);
-            HttpResponse response = client.execute(requsetPost);
-            System.out.println("Code " + response.getStatusLine().getStatusCode());
-            String code = response.getStatusLine().getStatusCode() + "";
-            if (response.getStatusLine().getStatusCode() == 200) {
-                String returnedJson = EntityUtils.toString(response.getEntity());
-                System.out.println(returnedJson);
-                Gson gson1 = new Gson();
-                isReturnOK = gson1.fromJson(returnedJson, boolean.class);
-                return isReturnOK;
-            } else {
-                ResponceCodeCecker.checkCode(code);
+            try {
+                HttpClient client = HttpClientBuilder.create().build();
+                HttpPost requsetPost = new HttpPost(url);
+                requsetPost.addHeader("User-Agent123", USER_AGENT);
+                String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
+                int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
+                MainViewInformaiton mvi = new MainViewInformaiton();
+                oldUser.setSessionToken(token);
+                alteredUser.setSessionToken(token);
+                oldUser.setUserID(userID);
+                System.out.print("Servercall ex phone : " +  oldUser.getPhone());
+                alteredUser.setUserID(userID);
+                mvi.setOldUser(oldUser);
+                mvi.setCurrentUser(oldUser);
+                mvi.setAlteredUser(alteredUser);
+                mvi.setCurrentUser(oldUser);
+                String json = gson.toJson(mvi);
+                HttpEntity entity = new StringEntity(json);
+                requsetPost.setEntity(entity);
+                HttpResponse response = client.execute(requsetPost);
+                System.out.println("Code " + response.getStatusLine().getStatusCode());
+                String code = response.getStatusLine().getStatusCode() + "";
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    String returnedJson = EntityUtils.toString(response.getEntity());
+                    System.out.println(returnedJson);
+                    Gson gson1 = new Gson();
+                    isReturnOK = gson1.fromJson(returnedJson, boolean.class);
+                    return isReturnOK;
+                } else {
+                    ResponceCodeCecker.checkCode(code);
+                    closeSession();
+                    Main.getSpider().getMain().showLoginView();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
                 closeSession();
                 Main.getSpider().getMain().showLoginView();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
-            closeSession();
-            Main.getSpider().getMain().showLoginView();
+            return isReturnOK;
         }
-        return isReturnOK;
-    }
 
     @Override
     public ArrayList<Bike> getAvailableBikes() {

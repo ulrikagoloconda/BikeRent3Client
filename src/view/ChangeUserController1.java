@@ -43,44 +43,64 @@ public class ChangeUserController1 implements Initializable {
         lNameText.setText(currentUser.getlName());
         mailText.setText(currentUser.getEmail());
         phoneText.setText(Integer.toString(currentUser.getPhone()));
+        System.out.print("phone in populateText: " + currentUser.getPhone());
         passwordText.setText("");
         passwordCheckerText.setText("");
     }
 
 
-    public void updateUserClick(ActionEvent actionEvent) {
-        String userName = userNameText.getText();
-        String fName = fNameText.getText();
-        String lName = lNameText.getText();
-        String email = mailText.getText();
-        String phoneString = phoneText.getText();
-        String password = passwordText.getText();
-        String passwordChecker = passwordCheckerText.getText();
-        phoneString.replace("-", "");
-        phoneString.replace("+", "");
+        public void updateUserClick (ActionEvent actionEvent) {
+            String userName = userNameText.getText();
+            String fName = fNameText.getText();
+            String lName = lNameText.getText();
+            String email = mailText.getText();
+            String phoneString = phoneText.getText();
+            String password = passwordText.getText();
+            String passwordChecker = passwordCheckerText.getText();
+            phoneString.replace("-", "");
+            phoneString.replace("+", "");
 
 
-      boolean isAlterUserOK = false;
-      if (userName.length() < 5) {
+            boolean isAlterUserOK = false;
+            if (userName.length() < 5) {
                 System.out.println("username to short");
-                  ErrorView.showError(errorTitle, "fel vid uppdatering", "Kontrollera era uppgifter", userID, new Exception("username is to short!"));
+                ErrorView.showError(errorTitle, "fel vid uppdatering", "Kontrollera era uppgifter", userID, new Exception("username is to short!"));
+            } else if (password.length() < 1) {
+                System.out.println("password is to short!");
+                ErrorView.showError(errorTitle, "fel vid uppdatering", "Kontrollera era uppgifter", currentUser.getUserID(), new Exception("password is to short!"));
+            } else if (!password.equals(passwordChecker)) {
+                System.out.println("passw not same");
+                ErrorView.showError(errorTitle, "fel vid uppdatering", "Kontrollera era uppgifter", currentUser.getUserID(), new Exception("password is to not the same!"));
+            } else if (phoneString.length() < 2) {
+                System.out.println("phone is to short!");
+                ErrorView.showError(errorTitle, "fel vid uppdatering", "Kontrollera era uppgifter", currentUser.getUserID(), new Exception("phone is to short!"));
+            } else if (fName.length() < 1) {
+                System.out.println("fName is to short!");
+                ErrorView.showError(errorTitle, "fel vid uppdatering", "Kontrollera era uppgifter", currentUser.getUserID(), new Exception("First Name is to short!"));
+            } else if (lName.length() < 1) {
+                System.out.println("phone is to short!");
+                ErrorView.showError(errorTitle, "fel vid uppdatering", "Kontrollera era uppgifter", currentUser.getUserID(), new Exception("Last Name is to short!"));
+            } else if (phoneString.length() < 2) {
+                System.out.println("phone is to short!");
+                ErrorView.showError(errorTitle, "fel vid uppdatering", "Kontrollera era uppgifter", currentUser.getUserID(), new Exception("phone is to short!"));
             } else {
-              int phone = Integer.parseInt(phoneString);
-              System.out.println("we can now add some info");
-              int in_memberlevel = 1;
-              BikeUser user = new BikeUser(
-                  fName, lName, in_memberlevel, email, phone, userName, password);
-              isAlterUserOK = serverCall.updateUser(currentUser,user);
+                int phone = Integer.parseInt(phoneString);
+                System.out.println("we can now add some info");
+                int in_memberlevel = 1;
+                BikeUser user = new BikeUser(
+                        fName, lName, in_memberlevel, email, phone, userName, password);
+                System.out.println("phone to change: " + user.getPhone());
+                System.out.println("phone to change in to this: " + user.getPhone());
+                isAlterUserOK = serverCall.updateUser(currentUser, user);
             }
-                if (!isAlterUserOK) {
-                    ErrorView.showError(errorTitle, "fel vid inläsning", "Kontrollera era uppgifter", userID, new Exception(" :-( kunde inte lägga till användare"));
-                }
-                if (isAlterUserOK) {
-                    //boolean d = DialogView.showSimpleInfo("Ny användare upplaggd", "Lyckades", "Ny användare är nu upplagd");
-                    Main.getSpider().getMain().showLoginView();
-                }
+            if (!isAlterUserOK) {
+                ErrorView.showError(errorTitle, "fel vid inläsning", "Kontrollera era uppgifter", userID, new Exception(" :disappointed:  kunde inte lägga till användare"));
             }
-
+            if (isAlterUserOK) {
+                //boolean d = DialogView.showSimpleInfo("Ny användare upplaggd", "Lyckades", "Ny användare är nu upplagd");
+                Main.getSpider().getMain().showLoginView();
+            }
+        }
 
     public void abortClick(ActionEvent actionEvent) {
         Main.getSpider().getMain().showMainView();
