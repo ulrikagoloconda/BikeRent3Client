@@ -20,6 +20,7 @@ import view.Main;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -200,6 +201,8 @@ public class ServerCallImpl implements ServerCall {
     public ArrayList<Bike> getAvailableBikes() {
         Gson gson = new Gson();
         Bikes bikes = null;
+        long millisStart = Calendar.getInstance().getTimeInMillis();
+        System.out.println("Start: " + millisStart);
         String url = "http://localhost:8080/text/resources/availableBikes";
         try {
             HttpClient client = HttpClientBuilder.create().build();
@@ -221,12 +224,26 @@ public class ServerCallImpl implements ServerCall {
                 bikes = gson.fromJson(json, Bikes.class);
                 return bikes.getBikes();
             } else {
-                ResponceCodeCecker.checkCode(code);
-                closeSession();
-                Main.getSpider().getMain().showLoginView();
+                try {
+                   // ResponceCodeCecker.checkCode(code);
+                    long millisStop = Calendar.getInstance().getTimeInMillis();
+                    System.out.println("i else ");
+                    System.out.println("Tidsåtgång: " + (millisStop - millisStart) + " millisekunder");
+                    /*
+                    Läsa in 10114 cyklar = 80050 millisekunder MISSLYCKAT
+                    Läsa in 5114 cyklar = 51740 millisekunder MISSLYCKAT
+
+                     */
+                }catch (Exception e) {
+                    e.printStackTrace();
+                    closeSession();
+                    Main.getSpider().getMain().showLoginView();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
+            long millisStop = Calendar.getInstance().getTimeInMillis();
+            System.out.println("Tidsåtgång: " + (millisStop - millisStart) + " millisekunder" );
             ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
             closeSession();
             Main.getSpider().getMain().showLoginView();
@@ -527,6 +544,7 @@ public class ServerCallImpl implements ServerCall {
 
     @Override
     public ArrayList<Bike> getAllBikes() {
+        long millisStart = Calendar.getInstance().getTimeInMillis();
         String urlString = "http://localhost:8080/text/resources/getAllBikes";
         Bikes bikes = null;
         try {
@@ -551,6 +569,13 @@ public class ServerCallImpl implements ServerCall {
                 String returnedJson = EntityUtils.toString(response.getEntity());
                 Gson gson1 = new Gson();
                 bikes = gson1.fromJson(returnedJson, Bikes.class);
+                long millisStop = Calendar.getInstance().getTimeInMillis();
+                long sec1 = millisStop - millisStart;
+
+                System.out.println("Tidsåtgång: " + sec1 + " millisekunder" );
+                /*
+                28731st = 521 millisekunder
+                 */
                 return bikes.getBikes();
             } else {
                 ResponceCodeCecker.checkCode(code);
@@ -564,6 +589,7 @@ public class ServerCallImpl implements ServerCall {
             Main.getSpider().getMain().showLoginView();
             return null;
         }
+
         return bikes.getBikes();
     }
 
