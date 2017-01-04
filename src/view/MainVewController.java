@@ -127,6 +127,10 @@ public class MainVewController implements Initializable {
 
 
   public void searchAvailableBikes(ActionEvent actionEvent) {
+      System.out.println("i search MainView  ");
+
+      long millisStart = Calendar.getInstance().getTimeInMillis();
+
     executeLoanBtn.setDisable(true);
     netBtn.setVisible(false);
     availableBikes = serverCall.getAvailableBikes();
@@ -138,6 +142,9 @@ public class MainVewController implements Initializable {
     } else {
       populateGridPane(PopulateType.AVAILABLE_BIKES, availableBikes);
     }
+      long millisStop = Calendar.getInstance().getTimeInMillis();
+      System.out.println("i search MainView  ");
+      System.out.println("Tidsåtgång: " + (millisStop - millisStart) + " millisekunder");
   }
 
   public void showAdminView(ActionEvent actionEvent) {

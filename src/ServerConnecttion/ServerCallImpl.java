@@ -220,6 +220,9 @@ public class ServerCallImpl implements ServerCall {
             System.out.println("Code " + response.getStatusLine().getStatusCode());
             String code = response.getStatusLine().getStatusCode() + "";
             if (response.getStatusLine().getStatusCode() == 200) {
+                long millisStop = Calendar.getInstance().getTimeInMillis();
+                System.out.println("i if ");
+                System.out.println("Tidsåtgång: " + (millisStop - millisStart) + " millisekunder");
                 String json = EntityUtils.toString(response.getEntity());
                 bikes = gson.fromJson(json, Bikes.class);
                 return bikes.getBikes();
@@ -232,8 +235,20 @@ public class ServerCallImpl implements ServerCall {
                     /*
                     Läsa in 10114 cyklar = 80050 millisekunder MISSLYCKAT
                     Läsa in 5114 cyklar = 51740 millisekunder MISSLYCKAT
+                    Läsa in 4114 cyklar = 44635 millisekunder MISSLYCKAT
+                    Läsa in 3114 cyklar = 38240 millisekunder MISSLYCKAT
+                    Läsa in 2114 cyklar = 29717 millisekunder MISSLYCKAT
+                    Läsa in 1114 cyklar = 22131 millisekunder får respons 200, men error uppstår vid (String json = EntityUtils.toString(response.getEntity());
+                    Läsa in 1014 cyklar = 19851 millisekunder FUNKAR! MEN för att guit ska laddas helt tar det hela 33205
+                    Läsa in 1064 cyklar = 21389 milliseckunder får respons 200, men error uppstår vid (String json = EntityUtils.toString(response.getEntity());
+                    Läsa in 1054 cyklar = 20075 milliseckunder får respons 200, men error uppstår vid (String json = EntityUtils.toString(response.getEntity());
+                    Läsa in 1044 cyklar = 20274 milliseckunder får respons 200, men error uppstår vid (String json = EntityUtils.toString(response.getEntity());
+                    Läsa in 1034 cyklar = 19079 milliseckunder får respons 200, men error uppstår vid (String json = EntityUtils.toString(response.getEntity());
+                    Läsa in 1024 cyklar = 19409 milliseckunder får respons 200, men error uppstår vid (String json = EntityUtils.toString(response.getEntity());
+                    Läsa in 1019 cyklar = 18668 milliseckunder får respons 200, men error uppstår vid (String json = EntityUtils.toString(response.getEntity());
+                    Läsa in 1017 cyklar = 19570 millisekunder FUNKAR! MEN för att guit ska laddas helt tar det hela 35532
 
-                     */
+                    */
                 }catch (Exception e) {
                     e.printStackTrace();
                     closeSession();
