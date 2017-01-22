@@ -201,8 +201,6 @@ public class ServerCallImpl implements ServerCall {
     public ArrayList<Bike> getAvailableBikes() {
         Gson gson = new Gson();
         Bikes bikes = null;
-        long millisStart = Calendar.getInstance().getTimeInMillis();
-        System.out.println("Start: " + millisStart);
         String url = "http://localhost:8080/text/resources/availableBikes";
         try {
             HttpClient client = HttpClientBuilder.create().build();
@@ -216,22 +214,28 @@ public class ServerCallImpl implements ServerCall {
             String valuePair = jsonObject.toString();
             HttpEntity entity = new StringEntity(valuePair);
             requsetPost.setEntity(entity);
+            long millisStart = Calendar.getInstance().getTimeInMillis();
+            System.out.println("Start: " + millisStart);
+
+
             HttpResponse response = client.execute(requsetPost);
+            long millisStop = Calendar.getInstance().getTimeInMillis();
+            System.out.println("execute Tidsåtgång: " + (millisStop - millisStart) + " millisekunder");
+
             System.out.println("Code " + response.getStatusLine().getStatusCode());
             String code = response.getStatusLine().getStatusCode() + "";
             if (response.getStatusLine().getStatusCode() == 200) {
-                long millisStop = Calendar.getInstance().getTimeInMillis();
                 System.out.println("i if ");
-                System.out.println("Tidsåtgång: " + (millisStop - millisStart) + " millisekunder");
                 String json = EntityUtils.toString(response.getEntity());
+
+                long millisStart1 = Calendar.getInstance().getTimeInMillis();
                 bikes = gson.fromJson(json, Bikes.class);
+                long millisStop1 = Calendar.getInstance().getTimeInMillis();
+                System.out.println("Tidsåtgång fromJson: " + (millisStop1 - millisStart1) + " millisekunder");
                 return bikes.getBikes();
             } else {
                 try {
                    // ResponceCodeCecker.checkCode(code);
-                    long millisStop = Calendar.getInstance().getTimeInMillis();
-                    System.out.println("i else ");
-                    System.out.println("Tidsåtgång: " + (millisStop - millisStart) + " millisekunder");
                     /*
                     Läsa in 10114 cyklar = 80050 millisekunder MISSLYCKAT
                     Läsa in 5114 cyklar = 51740 millisekunder MISSLYCKAT
@@ -248,6 +252,10 @@ public class ServerCallImpl implements ServerCall {
                     Läsa in 1019 cyklar = 18668 milliseckunder får respons 200, men error uppstår vid (String json = EntityUtils.toString(response.getEntity());
                     Läsa in 1017 cyklar = 19570 millisekunder FUNKAR! MEN för att guit ska laddas helt tar det hela 35532
 
+                    4871 millisekunder går åt till att läsa från databasen
+                    1739 millisekunder går åt till att läsa från databas med index
+                    15051 millisekunder går åt till att göra om från objekt till json
+                    ungefär hälften av tiden går åt till att göra om från String till ojbekt
                     */
                 }catch (Exception e) {
                     e.printStackTrace();
@@ -257,8 +265,6 @@ public class ServerCallImpl implements ServerCall {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            long millisStop = Calendar.getInstance().getTimeInMillis();
-            System.out.println("Tidsåtgång: " + (millisStop - millisStart) + " millisekunder" );
             ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
             closeSession();
             Main.getSpider().getMain().showLoginView();

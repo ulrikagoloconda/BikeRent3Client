@@ -73,6 +73,7 @@ public class MainVewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        serverCall = new ServerCallImpl();
         Main.getSpider().setMainView(this);
         currentUser = Main.getSpider().getMain().getMvi().getCurrentUser();
         System.out.println("initialize, currentUser =  " + currentUser.getfName());
@@ -86,7 +87,7 @@ public class MainVewController implements Initializable {
         idMap = new HashMap<>();
         returnBtn.setVisible(false);
         currentListInView = new ArrayList<>();
-        serverCall = new ServerCallImpl();
+
     netBtn.setDisable(true);
     executeLoanBtn.setDisable(true);
     combobox.setEditable(true);
@@ -134,17 +135,15 @@ public class MainVewController implements Initializable {
     executeLoanBtn.setDisable(true);
     netBtn.setVisible(false);
     availableBikes = serverCall.getAvailableBikes();
-    System.out.println("längd på sökt lista " + availableBikes.size());
     if (availableBikes.size() > 3) {
       currentListInView = availableBikes.subList(0, 3);
-      System.out.println("längden på currentListInView " + currentListInView.size());
       populateGridPane(PopulateType.AVAILABLE_BIKES, currentListInView);
     } else {
       populateGridPane(PopulateType.AVAILABLE_BIKES, availableBikes);
     }
       long millisStop = Calendar.getInstance().getTimeInMillis();
       System.out.println("i search MainView  ");
-      System.out.println("Tidsåtgång: " + (millisStop - millisStart) + " millisekunder");
+      System.out.println("Total Tidsåtgång: " + (millisStop - millisStart) + " millisekunder");
   }
 
   public void showAdminView(ActionEvent actionEvent) {
