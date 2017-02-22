@@ -1,14 +1,17 @@
 package view;
 
 import ServerConnecttion.ServerCallImpl;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.BikeUser;
 
 import java.net.URL;
+import java.time.Year;
 import java.util.ResourceBundle;
 
 /**
@@ -25,6 +28,8 @@ public class ChangeUserController1 implements Initializable {
     private TextField userNameText, fNameText,lNameText,mailText, phoneText, passwordText, passwordCheckerText;
     @FXML
     private Label uniqeTextIdLabel;
+    @FXML
+    private ChoiceBox<String> genderBox;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -34,6 +39,10 @@ public class ChangeUserController1 implements Initializable {
         userID = currentUser.getUserID();
         populateText();
       serverCall = new ServerCallImpl();
+        ObservableList<String> list = genderBox.getItems();
+        list.add(0,"Annat");
+        list.add(1,"Kvinna");
+        list.add(2,"Man");
 
     }
 
@@ -53,6 +62,7 @@ public class ChangeUserController1 implements Initializable {
             String userName = userNameText.getText();
             String fName = fNameText.getText();
             String lName = lNameText.getText();
+            String gender = genderBox.getValue();
             String email = mailText.getText();
             String phoneString = phoneText.getText();
             String password = passwordText.getText();
@@ -88,7 +98,7 @@ public class ChangeUserController1 implements Initializable {
                 System.out.println("we can now add some info");
                 int in_memberlevel = 1;
                 BikeUser user = new BikeUser(
-                        fName, lName, in_memberlevel, email, phone, userName, password);
+                        fName, lName, gender, Year.of(1975), in_memberlevel, email, phone, userName, password);
                 System.out.println("phone to change: " + user.getPhone());
                 System.out.println("phone to change in to this: " + user.getPhone());
                 isAlterUserOK = serverCall.updateUser(currentUser, user);

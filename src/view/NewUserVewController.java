@@ -4,17 +4,19 @@ package view;
 
 import ServerConnecttion.ServerCallImpl;
 import helpers.EmailValidator;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import model.BikeUser;
 
 import java.net.URL;
+import java.time.Year;
 import java.util.ResourceBundle;
 
 public class NewUserVewController implements Initializable {
@@ -37,6 +39,12 @@ public class NewUserVewController implements Initializable {
   @FXML
   private Label uniqeTextIdLabel;
   @FXML
+  private ChoiceBox<String> genderBox;
+  @FXML
+  private ComboBox<Year> yearBox;
+  @FXML
+  private Pane spinnerPane;
+  private Spinner<Integer> spinner;
 
   private String errorTitle = "fel i lägg till användare";
   private ServerCallImpl serverCall;
@@ -48,12 +56,23 @@ public class NewUserVewController implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     Main.getSpider().setNewUserView(this);
+    ObservableList<String> list = genderBox.getItems();
+    list.add(0,"Annat");
+    list.add(1,"Kvinna");
+    list.add(2, "Man");
+    genderBox.setItems(list);
 
+   spinner = new Spinner<Integer>();
+    final int initialValue = 1975;
+  int thisYear = Year.now().getValue();
+    SpinnerValueFactory<Integer> valueFactory =
+            new SpinnerValueFactory.IntegerSpinnerValueFactory(thisYear-95, thisYear-18, initialValue);
+
+    spinner.setValueFactory(valueFactory);
+spinnerPane.getChildren().add(spinner);
   }
 
   public void logInClick(Event event) {
-
-
     System.out.println("logInClick");
 
   }
@@ -73,6 +92,9 @@ public class NewUserVewController implements Initializable {
     String email = mailText.getText();
     String phoneString = phoneText.getText();
     String password = passwordText.getText();
+    String gender = genderBox.getValue();
+   int year = spinner.getValue();
+   Year yearValue = Year.of(year);
     String passwordChecker = passwordCheckerText.getText();
     phoneString.replace("-", "");
     phoneString.replace("+", "");
@@ -110,7 +132,7 @@ public class NewUserVewController implements Initializable {
         int phone = Integer.parseInt(phoneString);
         System.out.println("we can now add some info");
         int in_memberlevel = 1;
-        BikeUser newUser = new BikeUser(fName, lName, in_memberlevel, email, phone, userName, password);
+        BikeUser newUser = new BikeUser(fName, lName, gender, yearValue , in_memberlevel, email, phone, userName, password);
         System.out.println(serverCall + " serverCall");
         boolean isAddUserOK = serverCall.createNewUser(newUser);
             //dbAccess.InsertNewUser(fName, lName, in_memberlevel, email, phone, userName, password);
