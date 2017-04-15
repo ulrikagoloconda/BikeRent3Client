@@ -24,6 +24,7 @@ public class BikeUser {
     private String sessionToken;
     private ArrayList<Bike> currentBikeLoans;
     private ArrayList<Integer> totalBikeLoans;
+    private PrestandaMesaurment mesaurment;
 
     public BikeUser() {
         this.sessionToken= "-1";
@@ -164,6 +165,14 @@ public class BikeUser {
 
     public void setBirthYear(Year birthYear) {
         this.birthYear = birthYear;
+    }
+
+    public PrestandaMesaurment getMesaurment() {
+        return mesaurment;
+    }
+
+    public void setMesaurment(PrestandaMesaurment mesaurment) {
+        this.mesaurment = mesaurment;
     }
 }
 

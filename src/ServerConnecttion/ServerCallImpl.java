@@ -2,10 +2,7 @@ package ServerConnecttion;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import model.Bike;
-import model.BikeUser;
-import model.Bikes;
-import model.MainViewInformaiton;
+import model.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -199,6 +196,8 @@ public class ServerCallImpl implements ServerCall {
 
     @Override
     public ArrayList<Bike> getAvailableBikes() {
+       PrestandaMesaurment mesaurment = Main.getSpider().getMainView().getPrestandaMesaurment();
+
         Gson gson = new Gson();
         Bikes bikes = null;
         String url = "http://localhost:8080/text/resources/availableBikes";
@@ -206,13 +205,18 @@ public class ServerCallImpl implements ServerCall {
             HttpClient client = HttpClientBuilder.create().build();
             HttpPost requsetPost = new HttpPost(url);
             requsetPost.addHeader("User-Agent123", USER_AGENT);
-            JsonObject jsonObject = new JsonObject();
+            BikeUser user = new BikeUser();
             String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
             int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
-            jsonObject.addProperty("sessionToken", token);
-            jsonObject.addProperty("userID", userID);
-            String valuePair = jsonObject.toString();
-            HttpEntity entity = new StringEntity(valuePair);
+           // jsonObject.addProperty("sessionToken", token);
+           // jsonObject.addProperty("userID", userID);
+            user.setSessionToken(token);
+            user.setUserID(userID);
+            user.setMesaurment(mesaurment);
+           // String valuePair = jsonObject.toString();
+            Gson gson1 = new Gson();
+            String json = gson1.toJson(user);
+            HttpEntity entity = new StringEntity(json);
             requsetPost.setEntity(entity);
             long millisStart = Calendar.getInstance().getTimeInMillis();
             System.out.println("Start: " + millisStart);
@@ -221,17 +225,23 @@ public class ServerCallImpl implements ServerCall {
             HttpResponse response = client.execute(requsetPost);
             long millisStop = Calendar.getInstance().getTimeInMillis();
             System.out.println("execute Tidsåtgång: " + (millisStop - millisStart) + " millisekunder");
-
+            double execute = millisStop - millisStart;
+            mesaurment.setExecuteSec(execute/1000);
             System.out.println("Code " + response.getStatusLine().getStatusCode());
             String code = response.getStatusLine().getStatusCode() + "";
             if (response.getStatusLine().getStatusCode() == 200) {
                 System.out.println("i if ");
-                String json = EntityUtils.toString(response.getEntity());
-
+                String json1 = EntityUtils.toString(response.getEntity());
                 long millisStart1 = Calendar.getInstance().getTimeInMillis();
-                bikes = gson.fromJson(json, Bikes.class);
+                bikes = gson.fromJson(json1, Bikes.class);
+                bikes.setPrestandaMesaurment(mesaurment);
                 long millisStop1 = Calendar.getInstance().getTimeInMillis();
                 System.out.println("Tidsåtgång fromJson: " + (millisStop1 - millisStart1) + " millisekunder");
+                double fromJson = millisStop1 - millisStart1/1000;
+                mesaurment.setGsonFromJsonSec(fromJson);
+                System.out.println(fromJson + " from json");
+                mesaurment.setDbProcedureSec(bikes.getPrestandaMesaurment().getDbProcedureSec());
+                //insertPrestandaMeasurment(mesaurment);
                 return bikes.getBikes();
             } else {
                 try {
@@ -269,6 +279,7 @@ public class ServerCallImpl implements ServerCall {
             closeSession();
             Main.getSpider().getMain().showLoginView();
         }
+
         return new ArrayList<>();
     }
 
@@ -661,6 +672,45 @@ public class ServerCallImpl implements ServerCall {
             e.printStackTrace();
         }
         return mvi;
+    }
+
+    @Override
+    public void insertPrestandaMeasurment(PrestandaMesaurment prestandaMesaurment) {
+        String urlString = "http://localhost:8080/text/resources/prestandaMeasurment";
+        Gson gson = new Gson();
+
+        try {
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpPost requsetPost = new HttpPost(urlString);
+            requsetPost.addHeader("User-Agent123", USER_AGENT);
+            String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
+            int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
+            BikeUser user = new BikeUser();
+            user.setSessionToken(token);
+            user.setUserID(userID);
+            user.setMesaurment(prestandaMesaurment);
+            System.out.println("Här sätte meas " + prestandaMesaurment);
+            String json = gson.toJson(user);
+            HttpEntity entity = new StringEntity(json);
+            requsetPost.setEntity(entity);
+            HttpResponse response = client.execute(requsetPost);
+            System.out.println("Code " + response.getStatusLine().getStatusCode());
+            String code = response.getStatusLine().getStatusCode() + "";
+            if (response.getStatusLine().getStatusCode() == 200) {
+                String returnedJson = EntityUtils.toString(response.getEntity());
+                System.out.println(returnedJson);
+            } else {
+                ResponceCodeCecker.checkCode(code);
+                closeSession();
+                Main.getSpider().getMain().showLoginView();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            ErrorView.showError("Serverfel", "Fel hos servern", "Försök igen senare", 0, new Exception(500 + "Fel hos server." + ""));
+            closeSession();
+            Main.getSpider().getMain().showLoginView();
+        }
     }
 }
 
