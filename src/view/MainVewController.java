@@ -63,7 +63,7 @@ public class MainVewController implements Initializable {
     private Bike selectedBikeSearch;
     private ArrayList<Bike> usersCurrentBikes;
     private ServerCall serverCall;
-    private PrestandaMesaurment mesaurment;
+    private PrestandaMeasurement mesaurment;
 
 
     private String errorTitle = "Fel i huvudfönster";
@@ -74,7 +74,6 @@ public class MainVewController implements Initializable {
         serverCall = new ServerCallImpl();
         Main.getSpider().setMainView(this);
         currentUser = Main.getSpider().getMain().getMvi().getCurrentUser();
-        System.out.println("initialize, currentUser =  " + currentUser.getfName());
         populateUserTextInGUI(currentUser);
         if (currentUser.getMemberLevel() != 10) {
             adminBtn.setVisible(false);
@@ -91,11 +90,10 @@ public class MainVewController implements Initializable {
         combobox.setEditable(true);
         idMap = new HashMap<>();
         returnBtn.setVisible(false);
-        mesaurment = new PrestandaMesaurment();
+        mesaurment = new PrestandaMeasurement();
         currentListInView = new ArrayList<>();
         serverCall = new ServerCallImpl();
         Image image = new Image("img/bike.png");
-        System.out.println(mainImage);
         mainImage.setImage(image);
 
     }
@@ -106,7 +104,6 @@ public class MainVewController implements Initializable {
         userNameLabel.setText(bikeUser.getUserName());
         memberLevelLabel.setText("* " + bikeUser.getMemberLevel() + " *");
         activeLoanLabel.setText("" + bikesInUse.size());
-        System.out.println(totalBikes.size() + " ");
         numberOfLoanedBikesLabel.setText("" + totalBikes.size());
         setStatLabel();
 
@@ -116,22 +113,15 @@ public class MainVewController implements Initializable {
         mvi = Main.getSpider().getMain().getMvi();
         float total = mvi.getTotalBikes();
         float free = mvi.getAvailableBikes();
-        System.out.println("free" + " " + free);
-        System.out.println("tot: " + total);
         float poc = free / total;
-        System.out.println("poc: " + poc);
         poc = poc * 100;
-        System.out.println(poc);
         statLabel.setText("" + poc + " %");
     }
 
 
     public void searchAvailableBikes(ActionEvent actionEvent) {
-        System.out.println("i search MainView  ");
-
-
         long millisStart = Calendar.getInstance().getTimeInMillis();
-
+        mesaurment.setComment("I search MainView");
         executeLoanBtn.setDisable(true);
         netBtn.setVisible(false);
         availableBikes = serverCall.getAvailableBikes();
@@ -142,11 +132,8 @@ public class MainVewController implements Initializable {
             populateGridPane(PopulateType.AVAILABLE_BIKES, availableBikes);
         }
         long millisStop = Calendar.getInstance().getTimeInMillis();
-        System.out.println("Total Tidsåtgång: " + (millisStop - millisStart) + " millisekunder");
-        mesaurment.setTotalTimeSec((millisStop - millisStart) / 1000);
-        mesaurment.setPerceivedTimeAvailableBikesSec((millisStop - millisStart) / 1000);
-        System.out.println((millisStop - millisStart) / 1000);
-        System.out.println("total i sec");
+        ServerCallImpl.getMesaurment().setTotalTimeSec((millisStop - millisStart) / 1000);
+        ServerCallImpl.getMesaurment().setPerceivedTimeAvailableBikesSec((millisStop - millisStart) / 1000);
         serverCall.insertPrestandaMeasurment(mesaurment);
     }
 
@@ -405,7 +392,7 @@ public class MainVewController implements Initializable {
         Main.getSpider().getMain().showLoginView();
     }
 
-    public PrestandaMesaurment getPrestandaMesaurment(){
+    public PrestandaMeasurement getPrestandaMesaurment(){
         return mesaurment;
     }
 }

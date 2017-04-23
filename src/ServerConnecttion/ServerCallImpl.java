@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.apache.http.HttpHeaders.USER_AGENT;
@@ -27,6 +26,7 @@ import static org.apache.http.HttpHeaders.USER_AGENT;
  * Created by Goloconda on 2016-12-01.
  */
 public class ServerCallImpl implements ServerCall {
+   private static PrestandaMeasurement staticMeasurment;
     @Override
     public BikeUser login(String userName, String passw) {
         //start: "try login"
@@ -75,7 +75,7 @@ public class ServerCallImpl implements ServerCall {
         } else {
             Gson gson = new Gson();
             MainViewInformaiton mvi = gson.fromJson(json, MainViewInformaiton.class);
-            System.out.println("totalloanslient mm:" + mvi.getCurrentUser().getCurrentBikeLoans() + " & " + mvi.getCurrentUser().getTotalBikeLoans() + " phone : " + mvi.getCurrentUser().getPhone() );
+           // System.out.println("totalloanslient mm:" + mvi.getCurrentUser().getCurrentBikeLoans() + " & " + mvi.getCurrentUser().getTotalBikeLoans() + " phone : " + mvi.getCurrentUser().getPhone() );
 
             if (mvi.getCurrentUser().getUserID() > 0) { //login = OK!!
                 user = mvi.getCurrentUser();
@@ -196,8 +196,7 @@ public class ServerCallImpl implements ServerCall {
 
     @Override
     public ArrayList<Bike> getAvailableBikes() {
-       PrestandaMesaurment mesaurment = Main.getSpider().getMainView().getPrestandaMesaurment();
-
+       PrestandaMeasurement mesaurment = Main.getSpider().getMainView().getPrestandaMesaurment();
         Gson gson = new Gson();
         Bikes bikes = null;
         String url = "http://localhost:8080/text/resources/availableBikes";
@@ -208,40 +207,30 @@ public class ServerCallImpl implements ServerCall {
             BikeUser user = new BikeUser();
             String token = Main.getSpider().getMain().getMainVI().getCurrentUser().getSessionToken();
             int userID = Main.getSpider().getMain().getMainVI().getCurrentUser().getUserID();
-           // jsonObject.addProperty("sessionToken", token);
-           // jsonObject.addProperty("userID", userID);
             user.setSessionToken(token);
             user.setUserID(userID);
             user.setMesaurment(mesaurment);
-           // String valuePair = jsonObject.toString();
             Gson gson1 = new Gson();
             String json = gson1.toJson(user);
             HttpEntity entity = new StringEntity(json);
             requsetPost.setEntity(entity);
             long millisStart = Calendar.getInstance().getTimeInMillis();
-            System.out.println("Start: " + millisStart);
-
-
             HttpResponse response = client.execute(requsetPost);
             long millisStop = Calendar.getInstance().getTimeInMillis();
-            System.out.println("execute Tidsåtgång: " + (millisStop - millisStart) + " millisekunder");
             double execute = millisStop - millisStart;
             mesaurment.setExecuteSec(execute/1000);
-            System.out.println("Code " + response.getStatusLine().getStatusCode());
             String code = response.getStatusLine().getStatusCode() + "";
             if (response.getStatusLine().getStatusCode() == 200) {
-                System.out.println("i if ");
                 String json1 = EntityUtils.toString(response.getEntity());
                 long millisStart1 = Calendar.getInstance().getTimeInMillis();
                 bikes = gson.fromJson(json1, Bikes.class);
-                bikes.setPrestandaMesaurment(mesaurment);
+                PrestandaMeasurement tempMeas = bikes.getPrestandaMeasurement();
                 long millisStop1 = Calendar.getInstance().getTimeInMillis();
-                System.out.println("Tidsåtgång fromJson: " + (millisStop1 - millisStart1) + " millisekunder");
                 double fromJson = millisStop1 - millisStart1/1000;
                 mesaurment.setGsonFromJsonSec(fromJson);
-                System.out.println(fromJson + " from json");
-                mesaurment.setDbProcedureSec(bikes.getPrestandaMesaurment().getDbProcedureSec());
-                //insertPrestandaMeasurment(mesaurment);
+                mesaurment.setDbProcedureSec(tempMeas.getDbProcedureSec());
+                mesaurment.setReadFromDbJdbcSec(tempMeas.getReadFromDbJdbcSec());
+                staticMeasurment = mesaurment;
                 return bikes.getBikes();
             } else {
                 try {
@@ -675,10 +664,9 @@ public class ServerCallImpl implements ServerCall {
     }
 
     @Override
-    public void insertPrestandaMeasurment(PrestandaMesaurment prestandaMesaurment) {
+    public void insertPrestandaMeasurment(PrestandaMeasurement prestandaMeasurement) {
         String urlString = "http://localhost:8080/text/resources/prestandaMeasurment";
         Gson gson = new Gson();
-
         try {
             HttpClient client = HttpClientBuilder.create().build();
             HttpPost requsetPost = new HttpPost(urlString);
@@ -688,8 +676,9 @@ public class ServerCallImpl implements ServerCall {
             BikeUser user = new BikeUser();
             user.setSessionToken(token);
             user.setUserID(userID);
-            user.setMesaurment(prestandaMesaurment);
-            System.out.println("Här sätte meas " + prestandaMesaurment);
+            prestandaMeasurement.setComment("Projekt: BikeRent3. Vid sök efter lediga cyklar läses alla lediga cyklar med bild från databasen samtidigt");
+            System.out.println("i insertPrestanda serverCall !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+ prestandaMeasurement.getDbProcedureSec());
+            user.setMesaurment(prestandaMeasurement);
             String json = gson.toJson(user);
             HttpEntity entity = new StringEntity(json);
             requsetPost.setEntity(entity);
@@ -712,5 +701,11 @@ public class ServerCallImpl implements ServerCall {
             Main.getSpider().getMain().showLoginView();
         }
     }
+
+    public static PrestandaMeasurement getMesaurment() {
+        System.out.println(staticMeasurment.getReadFromDbJdbcSec() + " " + staticMeasurment.getDbProcedureSec());
+        return staticMeasurment;
+    }
+
 }
 

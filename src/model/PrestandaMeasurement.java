@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 /**
  * Created by Goloconda on 2017-04-05.
  */
-public class PrestandaMesaurment {
+public class PrestandaMeasurement {
     private Integer measuramentId;
     private LocalDateTime dateTime;
     private double totalTimeSec;
@@ -20,11 +20,11 @@ public class PrestandaMesaurment {
     private String comment;
     private double totalSizeDataMb;
 
-    public PrestandaMesaurment() {
+    public PrestandaMeasurement() {
 
     }
 
-    public PrestandaMesaurment(Integer measuramentId, LocalDateTime dateTime, double totalTimeSec, double perceivedTimeAvailableBikesSec, double dbProcedureSec, double readFromDbJdbcSec, double gsonToJsonSec, double executeSec, double gsonFromJsonSec, double readOneBike, String comment, double totalSizeDataMb) {
+    public PrestandaMeasurement(Integer measuramentId, LocalDateTime dateTime, double totalTimeSec, double perceivedTimeAvailableBikesSec, double dbProcedureSec, double readFromDbJdbcSec, double gsonToJsonSec, double executeSec, double gsonFromJsonSec, double readOneBike, String comment, double totalSizeDataMb) {
         this.measuramentId = measuramentId;
         this.dateTime = dateTime;
         this.totalTimeSec = totalTimeSec;
@@ -115,7 +115,7 @@ public class PrestandaMesaurment {
         return readOneBike;
     }
 
-    public void setReadOneBike(double readOneBike) {
+    public void etReadOneBike(double readOneBike) {
         this.readOneBike = readOneBike;
     }
 

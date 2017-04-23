@@ -73,7 +73,6 @@ spinnerPane.getChildren().add(spinner);
   }
 
   public void logInClick(Event event) {
-    System.out.println("logInClick");
 
   }
 
@@ -85,7 +84,6 @@ spinnerPane.getChildren().add(spinner);
 
 
   public void newUserClick(ActionEvent actionEvent) {
-    System.out.println("clicked on newUserClick");
     String userName = userNameText.getText();
     String fName = fNameText.getText();
     String lName = lNameText.getText();
@@ -100,7 +98,6 @@ spinnerPane.getChildren().add(spinner);
     phoneString.replace("+", "");
 
       if (userName.length() < 5) {
-        System.out.println("username to short");
         ErrorView.showError(errorTitle, "fel vid uppdatering", "Kontrollera era uppgifter", currentUser.getUserID(), new Exception("username is to short!"));
       }
       /*else if (!dbAccess.isUserAvalible(userName)) {
@@ -108,7 +105,6 @@ spinnerPane.getChildren().add(spinner);
         ErrorView.showError(errorTitle, "fel vid uppdatering", "Kontrollera era uppgifter", currentUser.getUserID(), new Exception("username is allready taken!"));
       */
       else if (password.length() < 1) {
-        System.out.println("password is to short!");
         ErrorView.showError(errorTitle, "fel vid uppdatering", "Kontrollera era uppgifter", currentUser.getUserID(), new Exception("password is to short!"));
       } else if (!password.equals(passwordChecker)) {
         System.out.println("passw not same");
@@ -133,7 +129,6 @@ spinnerPane.getChildren().add(spinner);
         System.out.println("we can now add some info");
         int in_memberlevel = 1;
         BikeUser newUser = new BikeUser(fName, lName, gender, yearValue , in_memberlevel, email, phone, userName, password);
-        System.out.println(serverCall + " serverCall");
         boolean isAddUserOK = serverCall.createNewUser(newUser);
             //dbAccess.InsertNewUser(fName, lName, in_memberlevel, email, phone, userName, password);
         if (!isAddUserOK) {
@@ -148,6 +143,7 @@ spinnerPane.getChildren().add(spinner);
           boolean d = DialogView.showSimpleInfo("Mailutskick", "mail till er är skickat, Lyckades", "Öppnar nu inloggningsrutan");
         }
       }*/
+
           Main.getSpider().getMain().showLoginView();
         }
 
@@ -158,7 +154,6 @@ spinnerPane.getChildren().add(spinner);
 
 
   public void checkUserName(KeyEvent keyEvent) {
-    System.out.println("entering get username");
     String userName = userNameText.getText();
     if (userName.length() <= 5) {
       uniqeTextIdLabel.setText("Måste vara längre än 5 tecken");
@@ -187,7 +182,6 @@ spinnerPane.getChildren().add(spinner);
   }
 
   public void abortClick(ActionEvent actionEvent) {
-    System.out.println("abort click");
     Main.getSpider().getMain().showLoginView();
    /* try {
       FXMLLoader loginLoader = Main.getSpider().getMain().getLoginViewLoader();

@@ -11,7 +11,7 @@ public class Bikes {
     //Lite tillfällig klass, vi kan behöva bygga ut denna för att anpassa till det vi behöver
     ArrayList<Bike> bikes;
     private Map<String,Integer> searchResults;
-    private PrestandaMesaurment prestandaMesaurment;
+    private PrestandaMeasurement prestandaMeasurement;
 
 
 
@@ -36,11 +36,11 @@ public class Bikes {
         this.searchResults = searchResults;
     }
 
-    public PrestandaMesaurment getPrestandaMesaurment() {
-        return prestandaMesaurment;
+    public PrestandaMeasurement getPrestandaMeasurement() {
+        return prestandaMeasurement;
     }
 
-    public void setPrestandaMesaurment(PrestandaMesaurment prestandaMesaurment) {
-        this.prestandaMesaurment = prestandaMesaurment;
+    public void setPrestandaMeasurement(PrestandaMeasurement prestandaMeasurement) {
+        this.prestandaMeasurement = prestandaMeasurement;
     }
 }
