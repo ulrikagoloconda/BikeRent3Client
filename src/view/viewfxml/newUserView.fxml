@@ -74,5 +74,20 @@
                 <Cursor fx:constant="OPEN_HAND" />
             </cursor>
         </AnchorPane>
+      <Pane fx:id="messagePane" prefHeight="207.0" prefWidth="318.0" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="100.0">
+         <children>
+            <Button fx:id="okButton" layoutX="254.0" layoutY="157.0" mnemonicParsing="false" onAction="#showLogin" text="Ok" />
+            <Label fx:id="messageLable" contentDisplay="CENTER" layoutX="13.0" layoutY="34.0" prefHeight="52.0" prefWidth="294.0">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+            <Label fx:id="messageLable1" contentDisplay="CENTER" layoutX="31.0" layoutY="86.0" prefHeight="36.0" prefWidth="256.0" text="Tryck Ok för att logga in!" textAlignment="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
     </children>
 </AnchorPane>

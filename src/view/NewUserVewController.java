@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import model.BikeUser;
@@ -37,18 +38,20 @@ public class NewUserVewController implements Initializable {
   @FXML
   private TextField passwordCheckerText;
   @FXML
-  private Label uniqeTextIdLabel;
+  private Label uniqeTextIdLabel, messageLable;
   @FXML
   private ChoiceBox<String> genderBox;
   @FXML
   private ComboBox<Year> yearBox;
   @FXML
-  private Pane spinnerPane;
+  private Pane spinnerPane, messagePane;
   private Spinner<Integer> spinner;
+  @FXML
+  private AnchorPane loginPane;
 
   private String errorTitle = "fel i lägg till användare";
   private ServerCallImpl serverCall;
-
+  private String createdUserName;
   public NewUserVewController() {
     serverCall = new ServerCallImpl();
   }
@@ -70,6 +73,7 @@ public class NewUserVewController implements Initializable {
 
     spinner.setValueFactory(valueFactory);
 spinnerPane.getChildren().add(spinner);
+    messagePane.setVisible(false);
   }
 
   public void logInClick(Event event) {
@@ -85,6 +89,7 @@ spinnerPane.getChildren().add(spinner);
 
   public void newUserClick(ActionEvent actionEvent) {
     String userName = userNameText.getText();
+    createdUserName = userName;
     String fName = fNameText.getText();
     String lName = lNameText.getText();
     String email = mailText.getText();
@@ -126,7 +131,6 @@ spinnerPane.getChildren().add(spinner);
         ErrorView.showError(errorTitle, "fel vid uppdatering", "Kontrollera era uppgifter", currentUser.getUserID(), new Exception("phone is to short!"));
       } else {
         int phone = Integer.parseInt(phoneString);
-        System.out.println("we can now add some info");
         int in_memberlevel = 1;
         BikeUser newUser = new BikeUser(fName, lName, gender, yearValue , in_memberlevel, email, phone, userName, password);
         boolean isAddUserOK = serverCall.createNewUser(newUser);
@@ -143,12 +147,19 @@ spinnerPane.getChildren().add(spinner);
           boolean d = DialogView.showSimpleInfo("Mailutskick", "mail till er är skickat, Lyckades", "Öppnar nu inloggningsrutan");
         }
       }*/
+      showConfirmationPane();
 
-          Main.getSpider().getMain().showLoginView();
         }
 
 //      ErrorView.showError("Inloggningsfel", "fel vid inloggning","Kontrollera era uppgifter" ,  e);
     }
+
+  }
+
+  public void showConfirmationPane(){
+    loginPane.setVisible(false);
+    messagePane.setVisible(true);
+    messageLable.setText("Användare "+ createdUserName + " är skapad");
 
   }
 
@@ -198,4 +209,7 @@ spinnerPane.getChildren().add(spinner);
   }
 
 
+  public void showLogin(ActionEvent actionEvent) {
+    Main.getSpider().getMain().showLoginView();
+  }
 }

@@ -121,7 +121,6 @@ public class MainVewController implements Initializable {
 
     public void searchAvailableBikes(ActionEvent actionEvent) {
         long millisStart = Calendar.getInstance().getTimeInMillis();
-        mesaurment.setComment("I search MainView");
         executeLoanBtn.setDisable(true);
         netBtn.setVisible(false);
         availableBikes = serverCall.getAvailableBikes();
@@ -132,8 +131,10 @@ public class MainVewController implements Initializable {
             populateGridPane(PopulateType.AVAILABLE_BIKES, availableBikes);
         }
         long millisStop = Calendar.getInstance().getTimeInMillis();
-        ServerCallImpl.getMesaurment().setTotalTimeSec((millisStop - millisStart) / 1000);
-        ServerCallImpl.getMesaurment().setPerceivedTimeAvailableBikesSec((millisStop - millisStart) / 1000);
+        double total = (millisStop - millisStart) / 1000.0;
+        double perc = (millisStop - millisStart) / 1000.0;
+        ServerCallImpl.getMesaurment().setTotalTimeSec(total);
+        ServerCallImpl.getMesaurment().setPerceivedTimeAvailableBikesSec(perc);
         serverCall.insertPrestandaMeasurment(mesaurment);
     }
 

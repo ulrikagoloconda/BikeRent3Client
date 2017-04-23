@@ -115,7 +115,7 @@ public class PrestandaMeasurement {
         return readOneBike;
     }
 
-    public void etReadOneBike(double readOneBike) {
+    public void setReadOneBike(double readOneBike) {
         this.readOneBike = readOneBike;
     }
 

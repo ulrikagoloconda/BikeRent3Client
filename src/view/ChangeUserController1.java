@@ -8,8 +8,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import model.BikeUser;
 
+import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.time.Year;
 import java.util.ResourceBundle;
@@ -27,9 +30,13 @@ public class ChangeUserController1 implements Initializable {
     @FXML
     private TextField userNameText, fNameText,lNameText,mailText, phoneText, passwordText, passwordCheckerText;
     @FXML
-    private Label uniqeTextIdLabel;
+    private Label uniqeTextIdLabel, messageLable;
     @FXML
     private ChoiceBox<String> genderBox;
+    @FXML
+    private AnchorPane mainPane;
+    @FXML
+    private Pane secundPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -39,6 +46,8 @@ public class ChangeUserController1 implements Initializable {
         userID = currentUser.getUserID();
         populateText();
       serverCall = new ServerCallImpl();
+      mainPane.setVisible(true);
+      secundPane.setVisible(false);
         ObservableList<String> list = genderBox.getItems();
         list.add(0,"Annat");
         list.add(1,"Kvinna");
@@ -99,8 +108,7 @@ public class ChangeUserController1 implements Initializable {
                 int in_memberlevel = 1;
                 BikeUser user = new BikeUser(
                         fName, lName, gender, Year.of(1975), in_memberlevel, email, phone, userName, password);
-                System.out.println("phone to change: " + user.getPhone());
-                System.out.println("phone to change in to this: " + user.getPhone());
+
                 isAlterUserOK = serverCall.updateUser(currentUser, user);
             }
             if (!isAlterUserOK) {
@@ -108,9 +116,16 @@ public class ChangeUserController1 implements Initializable {
             }
             if (isAlterUserOK) {
                 //boolean d = DialogView.showSimpleInfo("Ny användare upplaggd", "Lyckades", "Ny användare är nu upplagd");
-                Main.getSpider().getMain().showLoginView();
+
+                showConfirmationView();
             }
         }
+
+    private void showConfirmationView() {
+        mainPane.setVisible(false);
+        secundPane.setVisible(true);
+        messageLable.setText("Uppdateringen är klar! ");
+    }
 
     public void abortClick(ActionEvent actionEvent) {
         Main.getSpider().getMain().showMainView();
@@ -145,5 +160,10 @@ public class ChangeUserController1 implements Initializable {
             Main.getSpider().getMainView().populateUserTextInGUI(currentUser);
             Main.getSpider().getMain().showLoginView();
         }*/
+    }
+
+    public void showMainView(ActionEvent actionEvent) {
+        Main.getSpider().getMain().showMainView();
+
     }
 }
